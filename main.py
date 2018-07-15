@@ -1,14 +1,6 @@
-from PIL import Image
-
-import ocr
-
-
-def main():
-    image = Image.open('test_images/IMG_20180710_170326.jpg')
-    tests = ocr.parse_image(image)
-    print(tests.date)
-    print(tests.values)
-
+import config
+import web
 
 if __name__ == '__main__':
-    main()
+    web.app.run(host=config.ADDRESS, port=config.PORT, debug=config.DEBUG)
+

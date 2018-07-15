@@ -97,4 +97,4 @@ ENV/
 
 .idea/
 test_images/
-
+db/
