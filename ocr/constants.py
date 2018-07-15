@@ -1,0 +1,8 @@
+DATE_REGEX = '(\d{2}\.\d{2}\.\d{4})'
+SIGNATURE_TEXT = 'UZM DR. Naile Fevziye MISIRLIOĞLU'
+SIGNATURE_TEXT_THRESHOLD = 4
+JUNK_WORDS = ['L', 'H', '#', '%', u'Miliyon/μL', 'g/dL', 'Bin/μL', 'mEq/L']
+JUNK_WORD_THRESHOLD = 2
+MARGIN = 10
+DATE_LINE_START = 'Onay'
+BLOOD_TEST_START = 'TESTLER'
