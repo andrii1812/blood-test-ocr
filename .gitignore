@@ -98,3 +98,4 @@ ENV/
 .idea/
 test_images/
 db/
+node_modules/

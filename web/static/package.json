@@ -1,0 +1,19 @@
+{
+  "devDependencies": {
+    "@types/react": "^16.4.6",
+    "@types/react-dom": "^16.0.6",
+    "node-sass": "^4.9.2",
+    "parcel-bundler": "^1.9.7",
+    "parcel-plugin-typescript": "^1.0.0",
+    "tslint": "^5.10.0",
+    "tslint-react": "^3.6.0",
+    "typescript": "^2.9.2"
+  },
+  "dependencies": {
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  },
+  "scripts": {
+    "watch": "parcel ./src/index.html --public-url /static/dist"
+  }
+}
