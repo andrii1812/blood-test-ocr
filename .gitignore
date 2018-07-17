@@ -97,5 +97,5 @@ ENV/
 
 .idea/
 test_images/
-db/
+data/
 node_modules/

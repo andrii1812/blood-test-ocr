@@ -24,10 +24,18 @@ class Tag(db.Entity):
 
 
 class BloodTest(db.Entity):
-    date = PrimaryKey(datetime)
+    id = PrimaryKey(int, auto=True)
+    date = Required(datetime)
     values = Set('BloodTestEntry')
-    image = Required(bytes)
-    tag = Required('Tag')
+    images = Set('TestImage')
+    tag = Optional('Tag')
+
+
+class TestImage(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    path = Required(str)
+    tests = Set('BloodTest')
+
 
 db.bind('sqlite', os.path.join('..', config.DATABASE_PATH), create_db=True)
 db.generate_mapping(create_tables=True)
