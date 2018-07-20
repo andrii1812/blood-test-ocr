@@ -3,6 +3,13 @@ import * as React from 'react'
 import { render } from 'react-dom'
 import './index.scss'
 
-import App from './components/App'
+import App from './containers/App'
+import { MuiThemeProvider } from 'material-ui/styles';
+import theme from './themes/theme';
 
-render(<App />, document.getElementById('root'))
+render(
+    <MuiThemeProvider theme={theme}>
+        <App/>
+    </MuiThemeProvider>,
+    document.getElementById('root')
+)
