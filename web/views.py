@@ -1,7 +1,7 @@
-from datetime import datetime
+import os
 from PIL import Image
-from flask import request, jsonify, Response
-from flask_restful import Resource, marshal_with, fields, abort
+from flask import request, jsonify, send_from_directory
+from flask_restful import Resource, abort
 
 import ocr
 import web
@@ -11,6 +11,12 @@ import orm
 @web.app.route('/')
 def index():
     return web.app.send_static_file('dist/index.html')
+
+
+@web.app.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    return send_from_directory(os.path.join('..', web.app.config['UPLOADS_DEFAULT_DEST']),
+                               filename)
 
 
 @web.app.route('/reference_names')
@@ -25,9 +31,12 @@ def ingest_image():
     image = Image.open(image_obj.stream)
     test = ocr.parse_image(image)
 
+    image_obj.stream.seek(0)
     filename = web.images.save(image_obj)
     url = web.images.url(filename)
-    return jsonify({'url': url, 'test': test._asdict()})
+    result = test._asdict()
+    result['url'] = url
+    return jsonify(result)
 
 
 class Test(Resource):
@@ -35,11 +44,11 @@ class Test(Resource):
         return orm.get_test(test_id)
 
     def post(self):
-        data = request.json['test']
-        date = data['date']
-        values = data['values']
-        url = request.json['url']
-        tag = request.json.get('tag')
+        test_data = request.json
+        date = test_data['date']
+        values = test_data ['values']
+        url = test_data['url']
+        tag = test_data.get('tag')
         test_id = orm.save_test(date, values, url, tag)
         return test_id
 
