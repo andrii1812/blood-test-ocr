@@ -1,22 +1,24 @@
 import * as React from "react";
-import {State, initState, IngestResult} from '../model/state'
+import {IAppState, initState, ingestImage, saveTest, loadReferenceNames} from '../model'
 import FileSelect from "../components/FileSelect";
 import urls from "../model/urls";
 import ResultsDisplay from "../components/ResultsDisplay";
-import { Divider } from "material-ui";
+import './app.scss'
+import { CssBaseline, Grid } from "@material-ui/core";
 
-export default class App extends React.Component<{},State> {
-    
-    loadReferenceValues(): any {
-        fetch(urls.REFERENCE_NAMES)
-            .then(x => x.json())
-            .then(x => {this.setState({...this.state, referenceNames: x})})
-    }
+export default class App extends React.Component<{},IAppState> {
 
-    constructor(props: State) {
+    constructor(props: IAppState) {
         super(props);
         this.state = initState();
-        this.loadReferenceValues();       
+        this.loadReferenceValues();  
+    }
+
+    loadReferenceValues() {
+        loadReferenceNames()
+            .then(x => {
+                this.setState({referenceNames: x})
+            });
     }
 
     fileSelected(file: File){        
@@ -24,30 +26,35 @@ export default class App extends React.Component<{},State> {
     }
 
     fetchResults(file: File) {
-        const data = new FormData();
-        data.append('image', file);
-
-        fetch(urls.INGEST_IMAGE, {
-            method: 'POST',
-            body: data
-        })
-        .then(r => r.json())
+        ingestImage(file)
         .then(x => {
             this.setState({
-                ...this.state,
-                ingestResults: {...x.test, url: x.url}
+                ingestResults: x
             });
         });
     }
 
+    save() {
+        if (this.state.ingestResults) {
+            saveTest(this.state.ingestResults);
+        }
+    }
+
     render() {
-        return (   
-            <div className="app">
-                <FileSelect selectSubmit={this.fileSelected.bind(this)}/>    
-                <Divider/>            
-                <ResultsDisplay />
-            </div>         
-            //data={this.state.ingestResults} references={this.state.referenceNames} />}
+        return (
+            <Grid container spacing={16} direction="column" justify="flex-end">
+                <Grid item>
+                    <FileSelect selectSubmit={this.fileSelected.bind(this)}/>
+                </Grid>
+                {this.state.ingestResults && 
+                    (<Grid item>
+                        <ResultsDisplay 
+                            data={this.state.ingestResults} 
+                            references={this.state.referenceNames} 
+                            save={this.save.bind(this)} />
+                    </Grid>)
+                }
+            </Grid>                 
         )
     }
 }

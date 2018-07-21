@@ -11,6 +11,7 @@
     "parcel-plugin-typescript": "^1.0.0",
     "tslint": "^5.11.0",
     "tslint-react": "^3.6.0",
+    "typeface-roboto": "^0.0.54",
     "typescript": "^2.9.2"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "react-dom": "^15.4.0 || ^16.0.0"
   },
   "scripts": {
-    "watch": "parcel ./src/index.html --public-url /static/dist"
+    "watch": "parcel ./src/index.html --public-url /static/dist",
+    "build": "parcel build ./src/index.html --public-url /static/dist --no-source-maps"
   }
 }

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Card, CardHeader, CardText, CardActions, RaisedButton } from "material-ui";
+import Typography from "@material-ui/core/Typography";
 
 interface IFileSelectProps {
     selectSubmit: (file: File) => void
@@ -32,7 +33,9 @@ class FileSelect extends React.Component<IFileSelectProps> {
     render() {
         return (
             <Card>
-                <CardHeader title="Upload file"/>
+                <CardHeader>
+                    <Typography variant="title">Input File</Typography>
+                </CardHeader>
                 <CardText>
                     <input type='file' onChange={this.handleFileChange.bind(this)}/>
                 </CardText>

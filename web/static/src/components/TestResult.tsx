@@ -6,7 +6,9 @@ import ReferencetextInput from "./ReferenceTextInput";
 interface ITestResultProps {
     name: string,
     value: string,
-    references: string[]
+    references: string[],
+    onNameChange: (name: string, newName: string) => void,
+    onValueChange: (name: string, value: string) => void
 }
 
 export default class TestResult extends React.Component<ITestResultProps> {
@@ -14,14 +16,26 @@ export default class TestResult extends React.Component<ITestResultProps> {
         super(props);
     }
 
+    onNameChange(name: string, newName: string) {
+        this.props.onNameChange(name, newName);
+    }
+
+    onValueChange(e: any) {
+        this.props.onValueChange(this.props.name, e.target.value);
+    }
+
     render() {
         return (
-            <Grid container>
-                <Grid item xs={6} spacing={8}>
-                    <ReferencetextInput name={this.props.name} value={this.props.name} references={this.props.references}/>
+            <Grid container spacing={16} justify="flex-start" alignItems="center">
+                <Grid item xs={6}>
+                    <ReferencetextInput 
+                        name={this.props.name} 
+                        value={this.props.name} 
+                        references={this.props.references}
+                        onChange={this.onNameChange.bind(this)}/>
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField id={this.props.name + '_value'} value={this.props.value}/>
+                    <TextField id={this.props.name + '_value'} value={this.props.value} onChange={this.onValueChange.bind(this)}/>
                 </Grid>
             </Grid>
         )

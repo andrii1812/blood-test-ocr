@@ -1,41 +1,96 @@
 import React = require("react");
-import { IngestResult } from "../model/state";
-import { Card, CardHeader, CardText, TextField } from "material-ui";
+import { IBloodTest } from "../model";
+import { Card, CardHeader, CardText, RaisedButton, Divider } from "material-ui";
 import TestResult from "./TestResult";
+import { CardActions, Grid, Typography, Paper } from "@material-ui/core";
+import { ImageView } from "./imageView/ImageView";
 
 interface IResultDisplayProps {
-    data: IngestResult,
-    references: string[]
+    data: IBloodTest,
+    references: string[],
+    save: () => void
 }
 
-export default class ResultsDisplay extends React.Component { //<IResultDisplayProps> {
+export default class ResultsDisplay extends React.Component<IResultDisplayProps> {
     constructor(props: any) {
         super(props);
-        this.state = {
-            "data":{
-                "date":"10.07.2018",
-                "values":[["RBC—Alyuvarlar","2.99"],["Hâlâ—Hemoglobin","8.8"],["_li_lÇTıljematokrit","24.8"],["_MÇX","82.9"],["MÇFL","29.4"],["MCHC","35.5"],["RDW—SD","37.2"],["RDW","12.3"],["WBC-Akyuvarlar","5.55"],["Nötrofil","84.1"],["Lenfosit","13.7"],["Monosit 1_3",0],["Eozinofil","0.0"],["Bazofil","0.9"],["Nötrofil","4.67"],["Lenfosit","0.76"],["Monosit","0.07"],["Eozinofil","0.00"],["Bazofil","0.05"],["PLT-Trombosit","98"],["MPV","10.2"],["PDW","12.0"],["PCT","0.10"]],
-                "url":"/static/img/images/IMG_20180710_170326_1.jpg"
-            },
-            "references":["RBC-Alyuvarlar","HGB-Hemoglobin","HCT-Hematokrit","MCV","MCH","MCHC","RDW-SD","RDW","WBC-Akyuvarlar","Nötrofıl%","Lenfosıt%","Monosıt%","Eosınofıl%","Basofıl%","Nötrofıl#","Lenfosıt#","Monosıt#","Eosınofıl#","Basofıl#","PLT-Trombosit","MPV","PDW","PCT","GLUKOZ, AÇLIK","KALSIUM (CA), TOTAL, SERUM","MAGNESIUM (Mg), TOTAL, SERUM","CRP, KANTITATIF","SODYUM (Na), SERUM","POTASYUM (K), SERUM","aPPT","PT%#","PROTROMBIN ZAMANI","PTIRN#","tFGH (CKD-EPI)#","tFGH (MDRD)#","KREATININ, SERUM#","ÜRE, SERUM","ÜRIK ACIT, SERUM","PROTEIN, TOTAL, SERUM","ALBUMIN, SERUM","MAGNESYUM (Mg), SERUM","SGOT (AST)","SGPT (ALT)","ALP (ALKALEN FOSFATAZ)","GGT (G-GLUTAMIL TRANSFERAZ)","LDH (LAKTAK DEHID.), SERUM","BILIRUBIN, DIREKT, SERUM","BILIRUBIN, TOTAL"]
-            };
+    }
+
+    onNameChange(name: string, newName: string) {
+        let value = this.findValue(name);
+        value[0] = newName;    
+        this.setState({...this.state});
+    }
+
+    onValueChange(name: string, value:string) {
+        let valueObj = this.findValue(name);
+        valueObj[1] = value;        
+        this.setState({...this.state});
+    }
+
+    findValue(name: string) {
+        let index = this.props.data.values.findIndex(x => x[0] === name);
+        return this.props.data.values[index];
+    }
+
+    isSaveEnabled(): boolean {
+        let enabled = true;
+        for(let item of this.props.data.values) {
+            if (this.props.references.indexOf(item[0]) === -1) {
+                enabled = false;
+            }
+        }
+        return enabled;
+    }
+
+    save() {
+        this.props.save();
     }
 
     render() {
         return (
             <Card>
-                <CardHeader title="Parsed results"/>
-                <CardText>
-                    <div>
-                        <div>Date:</div>
-                        {this.state.data.date}
-                    </div>
-                    <div>
-                    {this.state.data.values.map(x => {
-                        return <TestResult name={x[0]} value={x[1]} references={this.state.references}/>
-                    })}  
-                    </div>                  
+                <CardHeader>
+                    <Typography variant="title">Parsed Results</Typography>
+                </CardHeader>
+                <CardText>    
+                    <Grid container spacing={16}>                        
+                        <Grid item md={3}>
+                            <Typography variant="subheading">
+                                Overall information
+                            </Typography>                            
+                        </Grid>
+                        <Grid item md={9}>                                                                                
+                            <Typography variant="body2">
+                                Date: {this.props.data.date}
+                            </Typography>
+                    
+                            {this.props.data.images.map(x => {
+                                return <ImageView {...x}/>
+                            })}                                                                
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={16}>                        
+                        <Grid item md={3}>
+                            <Typography variant="subheading">
+                                Parsed values
+                            </Typography>                            
+                        </Grid>
+                        <Grid item md={9}>
+                        {this.props.data.values.map((x, index) => {
+                            return <TestResult 
+                                        key={index + '_test_result'} 
+                                        name={x[0]} value={x[1]} 
+                                        references={this.props.references}
+                                        onNameChange={this.onNameChange.bind(this)}
+                                        onValueChange={this.onValueChange.bind(this)}/>
+                        })}      
+                        </Grid>
+                    </Grid>                    
                 </CardText>
+                <CardActions>
+                    <RaisedButton primary label="save" disabled={!this.isSaveEnabled()}  onClick={this.save.bind(this)}/>
+                </CardActions>
             </Card>
         )
     }   
