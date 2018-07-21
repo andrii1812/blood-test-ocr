@@ -34,8 +34,10 @@ def ingest_image():
     image_obj.stream.seek(0)
     filename = web.images.save(image_obj)
     url = web.images.url(filename)
+    image_id = orm.save_image(filename, url, image.width, image.height)
+
     result = test._asdict()
-    result['url'] = url
+    result['images'] = [{'id': image_id, 'path': url, 'width': image.width, 'height': image.height}]
     return jsonify(result)
 
 
@@ -46,10 +48,10 @@ class Test(Resource):
     def post(self):
         test_data = request.json
         date = test_data['date']
-        values = test_data ['values']
-        url = test_data['url']
+        values = test_data['values']
+        image_id = test_data['images'][0]['id']
         tag = test_data.get('tag')
-        test_id = orm.save_test(date, values, url, tag)
+        test_id = orm.save_test(date, values, image_id, tag)
         return test_id
 
 

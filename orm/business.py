@@ -15,7 +15,7 @@ def get_test(test_id):
             'id': test.id,
             'tag': test.tag,
             'date': test.date.strftime('%d.%m.%Y'),
-            'images': [{'id': i.id, 'path': i.path} for i in test.images],
+            'images': [{'id': i.id, 'path': i.url, 'width': i.width, 'height': i.height} for i in test.images],
             'values': [[v.name.name, v.value] for v in test.values]
         }
     except ObjectNotFound:
@@ -36,13 +36,13 @@ def check_tag(tag):
 
 
 @orm.db_session
-def save_test(date, values, url, tag):
+def save_test(date, values, image_id, tag):
     date = datetime.strptime(date, '%d.%m.%Y')
     parsed_values = check_values(values)
     if tag:
         tag = check_tag(tag)
 
-    image = TestImage(path=url)
+    image = TestImage[image_id]
     test_values = [BloodTestEntry(name=p[0], value=float(p[1])) for p in parsed_values]
     test = BloodTest(date=date, values=test_values, images=[image], tag=tag)
     if tag:
@@ -50,6 +50,13 @@ def save_test(date, values, url, tag):
 
     orm.commit()
     return test.id
+
+
+@orm.db_session
+def save_image(filename, url, width, height):
+    image = TestImage(filename=filename, url=url, width=width, height=height)
+    orm.commit()
+    return image.id
 
 
 @orm.db_session

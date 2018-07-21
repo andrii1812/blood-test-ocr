@@ -33,7 +33,10 @@ class BloodTest(db.Entity):
 
 class TestImage(db.Entity):
     id = PrimaryKey(int, auto=True)
-    path = Required(str)
+    filename = Required(str)
+    url = Required(str)
+    width = Required(int)
+    height = Required(int)
     tests = Set('BloodTest')
 
 

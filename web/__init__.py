@@ -14,7 +14,7 @@ def handle_invalid_usage(error):
     return response
 
 
-images = UploadSet('images', IMAGES)
+images = UploadSet(app.config['UPLOADS_SET_NAME'], IMAGES)
 configure_uploads(app, images)
 
 from web.views import *
