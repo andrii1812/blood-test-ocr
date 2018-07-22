@@ -35,8 +35,8 @@ export default class ReferencetextInput extends React.Component<IReferencetextIn
 
     render() {
         return (
-            <FormControl error={!this.isValid()} aria-describedby="name-error-text">
-                <Select id={this.props.name} value={this.props.value} style={{width: 256}} onChange={this.onChange.bind(this)}>
+            <FormControl error={!this.isValid()}>
+                <Select value={this.props.value} style={{width: 256}} onChange={this.onChange.bind(this)}>
                     {
                         this.props.references.map((x, i) => {
                             return <MenuItem key={i} value={x}>{x}</MenuItem>
@@ -47,9 +47,8 @@ export default class ReferencetextInput extends React.Component<IReferencetextIn
                             <MenuItem value={this.props.value}>{this.props.value}</MenuItem>                        
                     }
                 </Select>
-                {!this.isValid() && <FormHelperText id="name-error-text">Invalid value</FormHelperText>}
+                {!this.isValid() && <FormHelperText>Invalid value</FormHelperText>}
             </FormControl>            
         )
-        //<TextField errorText={this.getErrorText()} name={this.props.name} value={this.props.value} />
     }
 }

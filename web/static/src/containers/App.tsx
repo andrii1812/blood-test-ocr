@@ -1,17 +1,17 @@
 import * as React from "react";
-import {IAppState, initState, ingestImage, saveTest, loadReferenceNames} from '../model'
-import FileSelect from "../components/FileSelect";
-import urls from "../model/urls";
-import ResultsDisplay from "../components/ResultsDisplay";
-import './app.scss'
-import { CssBaseline, Grid } from "@material-ui/core";
+import { IAppState, initState, loadReferenceNames } from "../model";
+import AddNew from "./AddNew";
+import {HashRouter, Route, Link, withRouter, RouteComponentProps} from 'react-router-dom';
+import { Grid, List, ListItem, ListItemText, ListItemIcon, Hidden } from "@material-ui/core";
+import Add from '@material-ui/icons/Add';
+import ListIcon from "@material-ui/icons/List"
+import ChartIcon from "@material-ui/icons/ShowChart"
 
-export default class App extends React.Component<{},IAppState> {
-
-    constructor(props: IAppState) {
+class App extends React.Component<{}, IAppState> {
+    constructor(props: any) {
         super(props);
         this.state = initState();
-        this.loadReferenceValues();  
+        this.loadReferenceValues();
     }
 
     loadReferenceValues() {
@@ -21,40 +21,55 @@ export default class App extends React.Component<{},IAppState> {
             });
     }
 
-    fileSelected(file: File){        
-        this.fetchResults(file);
-    }
-
-    fetchResults(file: File) {
-        ingestImage(file)
-        .then(x => {
-            this.setState({
-                ingestResults: x
-            });
-        });
-    }
-
-    save() {
-        if (this.state.ingestResults) {
-            saveTest(this.state.ingestResults);
-        }
-    }
-
     render() {
         return (
-            <Grid container spacing={16} direction="column" justify="flex-end">
-                <Grid item>
-                    <FileSelect selectSubmit={this.fileSelected.bind(this)}/>
+            <HashRouter>
+                <Grid container>
+                    <Grid item md={2}>
+                        <List component="nav">
+                            <ListItem button component="a" href="#/">
+                                <ListItemIcon>
+                                    <Add/>
+                                </ListItemIcon>   
+                                <Hidden smDown>
+                                    <ListItemText>
+                                        Add new
+                                    </ListItemText>
+                                </Hidden>
+                            </ListItem>
+                            <ListItem button component="a" href="#/test">
+                                <ListItemIcon>
+                                    <ListIcon/>
+                                </ListItemIcon>
+                                <Hidden smDown> 
+                                    <ListItemText>
+                                        List all
+                                    </ListItemText>
+                                </Hidden>
+                            </ListItem>
+                            <ListItem button component="a" href="#/stat">
+                                <ListItemIcon>  
+                                    <ChartIcon/>
+                                </ListItemIcon> 
+                                <Hidden smDown>
+                                    <ListItemText>
+                                        Statistics
+                                    </ListItemText>
+                                </Hidden>
+                            </ListItem>
+                        </List>
+                    </Grid>
+                    <Grid item md={10}>
+                        <Route 
+                            path="/"
+                            exact
+                            render={(_) => <AddNew references={this.state.referenceNames}/>}
+                        /> 
+                    </Grid>                
                 </Grid>
-                {this.state.ingestResults && 
-                    (<Grid item>
-                        <ResultsDisplay 
-                            data={this.state.ingestResults} 
-                            references={this.state.referenceNames} 
-                            save={this.save.bind(this)} />
-                    </Grid>)
-                }
-            </Grid>                 
+            </HashRouter>
         )
     }
 }
+
+export default App

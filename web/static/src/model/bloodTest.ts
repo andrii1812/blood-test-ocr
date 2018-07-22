@@ -27,5 +27,5 @@ export function saveTest(test: IBloodTest) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(test)
-    }).then(x => x.text)
+    }).then(x => x.text());
 }

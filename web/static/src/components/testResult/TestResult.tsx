@@ -1,14 +1,18 @@
 import React = require("react");
 import { AutoComplete, TextField } from "material-ui";
 import Grid from '@material-ui/core/Grid';
-import ReferencetextInput from "./ReferenceTextInput";
+import ReferencetextInput from "../ReferenceTextInput";
+import './testResult.scss'
+import { Button } from "@material-ui/core";
+import Delete from "@material-ui/icons/Delete"
 
 interface ITestResultProps {
     name: string,
     value: string,
     references: string[],
     onNameChange: (name: string, newName: string) => void,
-    onValueChange: (name: string, value: string) => void
+    onValueChange: (name: string, value: string) => void,
+    onDelete: (name: string) => void
 }
 
 export default class TestResult extends React.Component<ITestResultProps> {
@@ -24,20 +28,29 @@ export default class TestResult extends React.Component<ITestResultProps> {
         this.props.onValueChange(this.props.name, e.target.value);
     }
 
+    delete() {
+        this.props.onDelete(this.props.name);
+    }
+
     render() {
         return (
-            <Grid container spacing={16} justify="flex-start" alignItems="center">
-                <Grid item xs={6}>
+            <div className="result-container">
+                <div className="result-item">
                     <ReferencetextInput 
                         name={this.props.name} 
                         value={this.props.name} 
                         references={this.props.references}
                         onChange={this.onNameChange.bind(this)}/>
-                </Grid>
-                <Grid item xs={6}>
+                </div>
+                <div className="result-item">
                     <TextField id={this.props.name + '_value'} value={this.props.value} onChange={this.onValueChange.bind(this)}/>
-                </Grid>
-            </Grid>
+                </div>
+                <div className="delete-button-container">
+                    <div className="delete-button" onClick={this.delete.bind(this)}>
+                        <Delete className="delete-icon"/>
+                    </div>
+                </div>
+            </div>
         )
     }
 }

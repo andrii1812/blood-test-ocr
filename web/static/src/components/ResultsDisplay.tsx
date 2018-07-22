@@ -1,7 +1,7 @@
 import React = require("react");
 import { IBloodTest } from "../model";
-import { Card, CardHeader, CardText, RaisedButton, Divider } from "material-ui";
-import TestResult from "./TestResult";
+import { Card, CardHeader, CardText, RaisedButton, Divider, Table } from "material-ui";
+import TestResult from "./testResult/TestResult";
 import { CardActions, Grid, Typography, Paper } from "@material-ui/core";
 import { ImageView } from "./imageView/ImageView";
 
@@ -47,6 +47,12 @@ export default class ResultsDisplay extends React.Component<IResultDisplayProps>
         this.props.save();
     }
 
+    delete(name: string) {
+        let index = this.props.data.values.findIndex(x => x[0] === name);
+        this.props.data.values.splice(index, 1);
+        this.setState({...this.state});
+    }
+
     render() {
         return (
             <Card>
@@ -77,14 +83,15 @@ export default class ResultsDisplay extends React.Component<IResultDisplayProps>
                             </Typography>                            
                         </Grid>
                         <Grid item md={9}>
-                        {this.props.data.values.map((x, index) => {
-                            return <TestResult 
-                                        key={index + '_test_result'} 
-                                        name={x[0]} value={x[1]} 
-                                        references={this.props.references}
-                                        onNameChange={this.onNameChange.bind(this)}
-                                        onValueChange={this.onValueChange.bind(this)}/>
-                        })}      
+                            {this.props.data.values.map((x, index) => {
+                                return <TestResult 
+                                            key={index + '_test_result'} 
+                                            name={x[0]} value={x[1]} 
+                                            references={this.props.references}
+                                            onNameChange={this.onNameChange.bind(this)}
+                                            onValueChange={this.onValueChange.bind(this)}
+                                            onDelete={this.delete.bind(this)}/>
+                            })}      
                         </Grid>
                     </Grid>                    
                 </CardText>
