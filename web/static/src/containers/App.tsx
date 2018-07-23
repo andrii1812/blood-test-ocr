@@ -1,29 +1,40 @@
 import * as React from "react";
-import { IAppState, initState, loadReferenceNames } from "../model";
+import { IAppState } from "../model";
 import AddNew from "./AddNew";
-import {HashRouter, Route, Link, withRouter, RouteComponentProps} from 'react-router-dom';
+import {Route} from 'react-router-dom';
 import { Grid, List, ListItem, ListItemText, ListItemIcon, Hidden } from "@material-ui/core";
 import Add from '@material-ui/icons/Add';
 import ListIcon from "@material-ui/icons/List"
 import ChartIcon from "@material-ui/icons/ShowChart"
+import { connect } from "react-redux";
+import { loadReferenceValues } from "../actions/references";
 
-class App extends React.Component<{}, IAppState> {
+
+
+interface IAppProps {
+    references: string[],
+    loadReferenceValues: () => void
+}
+
+const mapStateToProps = (state: IAppState) => ({
+    references: state.references
+})
+
+const mapDispatchToProps = (dispatch: any) => ({
+    loadReferenceValues: () => dispatch(loadReferenceValues())
+})
+
+class App extends React.Component<IAppProps> {
     constructor(props: any) {
         super(props);
-        this.state = initState();
-        this.loadReferenceValues();
     }
 
-    loadReferenceValues() {
-        loadReferenceNames()
-            .then(x => {
-                this.setState({referenceNames: x})
-            });
+    componentDidMount() {
+        this.props.loadReferenceValues();
     }
 
     render() {
         return (
-            <HashRouter>
                 <Grid container>
                     <Grid item md={2}>
                         <List component="nav">
@@ -63,13 +74,12 @@ class App extends React.Component<{}, IAppState> {
                         <Route 
                             path="/"
                             exact
-                            render={(_) => <AddNew references={this.state.referenceNames}/>}
+                            component={AddNew}
                         /> 
                     </Grid>                
                 </Grid>
-            </HashRouter>
         )
     }
 }
 
-export default App
+export default connect(mapStateToProps, mapDispatchToProps)(App)

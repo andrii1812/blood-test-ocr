@@ -1,16 +1,17 @@
-import { IAddNewState, getAddNewInitialState } from "./addNewState";
+import { IIngestFileState } from "./ingestFile";
+import { RouterState } from "react-router-redux";
+import { IBloodTest } from "./bloodTest";
 
 export * from "./bloodTest"
 export * from "./testImage"
-export * from "./addNewState"
+export * from "./ingestFile"
 
 export interface IAppState {
-    referenceNames: string[],
-}
-
-export function initState(): IAppState {
-    return {
-        referenceNames: []
+    router: RouterState,
+    references: string[],
+    addNew: {
+        ingestFile: IIngestFileState,
+        editValues: IBloodTest | null
     }
 }
 

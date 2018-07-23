@@ -1,71 +1,51 @@
 import * as React from "react";
-import {IAddNewState, initState, ingestImage, saveTest, loadReferenceNames, getAddNewInitialState} from '../model'
+import {IBloodTest, IAppState} from '../model'
 import FileSelect from "../components/FileSelect";
 import ResultsDisplay from "../components/ResultsDisplay";
 import './app.scss'
 import { Grid, CircularProgress } from "@material-ui/core";
-import { Redirect } from "react-router";
+import { ingestFile, saveTest } from "../actions/addNew/ingestFile";
+import { connect } from "react-redux";
 
 interface IAddNewProps {
-    references: string[]
+    references: string[],
+    ingestResults: IBloodTest,
+    loading: boolean
+    ingestFile: () => void
 }
 
-export default class AddNew extends React.Component<IAddNewProps, IAddNewState> {
-    state = getAddNewInitialState()
+const mapStateToProps = (state: IAppState) => ({
+    ingestResults: state.addNew.editValues,
+    loading: state.addNew.ingestFile.loading,
+    references: state.references
+})
 
+const mapDispatchToProps = (dispatch: any) => ({
+    ingestFile: () => dispatch(ingestFile())
+})
+
+class AddNew extends React.Component<IAddNewProps> {
     constructor(props: IAddNewProps) {
         super(props);
-        //this.fetchTest();
-    }
-
-    fileSelected(file: File){        
-        this.fetchResults(file);
-    }
-
-    fetchResults(file: File) {
-        this.setState({loading: true})
-        ingestImage(file)
-            .then(x => {
-                this.setState({ingestResults: x, loading: false});
-            });
-    }
-
-    fetchTest() {
-        fetch('test/1').then(x=> x.json()).then(x => {
-            this.setState({ingestResults: x, loading: false});
-        });
-    }
-
-    save() {
-        if (this.state.ingestResults) {
-            saveTest(this.state.ingestResults).then((x: string) => {
-                this.setState({saveId: x})
-            })
-        }
     }
 
     render() {
-        if(this.state.saveId !== null) {
-            return <Redirect to={'/test/' + this.state.saveId}/>
-        }
-
         return (
             <Grid container spacing={16} direction="column" justify="flex-end">
                 <Grid item>
-                    <FileSelect selectSubmit={this.fileSelected.bind(this)}/>
+                    <FileSelect />
                 </Grid>
                 {
-                    this.state.loading && <CircularProgress style={{margin: '0 auto'}}/>
+                    this.props.loading && <CircularProgress style={{margin: '0 auto'}}/>
                 }
-                {this.state.ingestResults && 
+                {this.props.ingestResults && 
                     (<Grid item>
-                        <ResultsDisplay
-                            data={this.state.ingestResults} 
-                            references={this.props.references} 
-                            save={this.save.bind(this)} />
+                        <ResultsDisplay/>
                     </Grid>)
                 }
             </Grid>                 
         )
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddNew)

@@ -1,36 +1,37 @@
 import React = require("react");
-import { IBloodTest } from "../model";
+import { IBloodTest, IAppState } from "../model";
 import { Card, CardHeader, CardText, RaisedButton, Divider, Table } from "material-ui";
 import TestResult from "./testResult/TestResult";
 import { CardActions, Grid, Typography, Paper } from "@material-ui/core";
 import { ImageView } from "./imageView/ImageView";
+import { saveTest } from "../actions/addNew/ingestFile";
+import { connect } from "react-redux";
+import { nameChanged, deleteEntry, valueChanged } from "../actions/addNew/editValues";
 
 interface IResultDisplayProps {
     data: IBloodTest,
     references: string[],
-    save: () => void
+    save: () => void,
+    nameChanged: (name: string, newName: string) => void,
+    valueChanged: (name: string, value: string) => void
+    deleteEntry: (name: string) => void
 }
 
-export default class ResultsDisplay extends React.Component<IResultDisplayProps> {
+const mapStateToProps = (state: IAppState) => ({
+    data: state.addNew.editValues,
+    references: state.references
+})
+
+const mapDispatchToProps = (dispatch: any) => ({
+    save: () => dispatch(saveTest()),
+    nameChanged: (name: string, newName: string) => dispatch(nameChanged({name, newName})),
+    valueChanged: (name: string, value: string) => dispatch(valueChanged({name, value})),
+    deleteEntry: (name: string) => dispatch(deleteEntry({name}))
+})
+
+class ResultsDisplay extends React.Component<IResultDisplayProps> {
     constructor(props: any) {
         super(props);
-    }
-
-    onNameChange(name: string, newName: string) {
-        let value = this.findValue(name);
-        value[0] = newName;    
-        this.setState({...this.state});
-    }
-
-    onValueChange(name: string, value:string) {
-        let valueObj = this.findValue(name);
-        valueObj[1] = value;        
-        this.setState({...this.state});
-    }
-
-    findValue(name: string) {
-        let index = this.props.data.values.findIndex(x => x[0] === name);
-        return this.props.data.values[index];
     }
 
     isSaveEnabled(): boolean {
@@ -41,16 +42,6 @@ export default class ResultsDisplay extends React.Component<IResultDisplayProps>
             }
         }
         return enabled;
-    }
-
-    save() {
-        this.props.save();
-    }
-
-    delete(name: string) {
-        let index = this.props.data.values.findIndex(x => x[0] === name);
-        this.props.data.values.splice(index, 1);
-        this.setState({...this.state});
     }
 
     render() {
@@ -71,8 +62,8 @@ export default class ResultsDisplay extends React.Component<IResultDisplayProps>
                                 Date: {this.props.data.date}
                             </Typography>
                     
-                            {this.props.data.images.map(x => {
-                                return <ImageView {...x}/>
+                            {this.props.data.images.map((x, i) => {
+                                return <ImageView key={i} {...x}/>
                             })}                                                                
                         </Grid>
                     </Grid>
@@ -88,17 +79,19 @@ export default class ResultsDisplay extends React.Component<IResultDisplayProps>
                                             key={index + '_test_result'} 
                                             name={x[0]} value={x[1]} 
                                             references={this.props.references}
-                                            onNameChange={this.onNameChange.bind(this)}
-                                            onValueChange={this.onValueChange.bind(this)}
-                                            onDelete={this.delete.bind(this)}/>
+                                            onNameChange={this.props.nameChanged}
+                                            onValueChange={this.props.valueChanged}
+                                            onDelete={this.props.deleteEntry}/>
                             })}      
                         </Grid>
                     </Grid>                    
                 </CardText>
                 <CardActions>
-                    <RaisedButton primary label="save" disabled={!this.isSaveEnabled()}  onClick={this.save.bind(this)}/>
+                    <RaisedButton primary label="save" disabled={!this.isSaveEnabled()}  onClick={this.props.save}/>
                 </CardActions>
             </Card>
         )
     }   
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ResultsDisplay)

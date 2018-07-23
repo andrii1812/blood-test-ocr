@@ -1,33 +1,37 @@
 import * as React from "react";
 import { Card, CardHeader, CardText, CardActions, RaisedButton } from "material-ui";
 import Typography from "@material-ui/core/Typography";
+import { fileSelected, ingestFile } from "../actions/addNew/ingestFile";
+import { connect } from "react-redux";
+import { IUploadFile } from "../model";
 
 interface IFileSelectProps {
-    selectSubmit: (file: File) => void
+    fileSelected: (file: IUploadFile) => void,
+    submit: () => void
 }
 
-class FileSelect extends React.Component<IFileSelectProps> {
-    file: File | null;
-    
+const mapDispatchToProps = (dispatch: any) => ({
+    fileSelected: (file: IUploadFile) => dispatch(fileSelected(file)),
+    submit: () => dispatch(ingestFile())
+})
+
+class FileSelect extends React.Component<IFileSelectProps> {    
     constructor(props: IFileSelectProps){
         super(props);
-        this.file = null;
     }
 
     selectSubmit() {
-        if (!this.file) {
-            return;
-        }
-
-        this.props.selectSubmit(this.file);
+        this.props.submit();
     }
 
     handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         if (!e.target.files) {
             return;
         }
+        const file = e.target.files[0];
+        const url = window.URL.createObjectURL(file);
 
-        this.file = e.target.files[0];        
+        this.props.fileSelected({url, filename: file.name});
     }
 
     render() {
@@ -47,4 +51,4 @@ class FileSelect extends React.Component<IFileSelectProps> {
     }
 }
 
-export default FileSelect;
+export default connect(null, mapDispatchToProps)(FileSelect);
