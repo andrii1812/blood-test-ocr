@@ -4,34 +4,41 @@ import { render } from 'react-dom'
 import './index.scss'
 import 'typeface-roboto'
 
-import App from './containers/App'
+import { App } from './containers/App'
 import { MuiThemeProvider } from 'material-ui/styles';
 import getTheme from './themes/theme';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import rootReducer from './reducers';
-import thunk from 'redux-thunk';
+import { applyMiddleware } from 'redux-subspace'
+import { createStore } from 'redux';
+import rootReducer from './rootReducer';
 import {composeWithDevTools} from 'redux-devtools-extension';
-import { routerMiddleware, ConnectedRouter } from 'react-router-redux';
-import createHistory from 'history/createBrowserHistory';
+import { createHashHistory } from 'history';
+import rootEpic from './rootEpic';
+import { createEpicMiddleware } from 'redux-subspace-observable';
+import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router'
 
-const history = createHistory();
+const history = createHashHistory();
 const rMiddleware = routerMiddleware(history);
 
 
 function configureStore() {
-    return createStore(
-        rootReducer, 
-        composeWithDevTools(applyMiddleware(thunk, rMiddleware))
+    const store =  createStore(
+        connectRouter(history)(rootReducer), 
+        composeWithDevTools(
+            applyMiddleware(
+                createEpicMiddleware(rootEpic),
+                rMiddleware))
     )
+
+    return store
 }
 
 render(
     <Provider store={configureStore()}>
         <ConnectedRouter history={history}>
-        <MuiThemeProvider muiTheme={getTheme()}>
-            <App/>
-        </MuiThemeProvider>
+            <MuiThemeProvider muiTheme={getTheme()}>
+                <App/>
+            </MuiThemeProvider>
         </ConnectedRouter>
     </Provider>,
 

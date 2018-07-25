@@ -6,12 +6,15 @@ export * from "./bloodTest"
 export * from "./testImage"
 export * from "./ingestFile"
 
+export interface IAddNewState {
+    ingestFile: IIngestFileState,
+    editValues: IBloodTest | null
+}
+
 export interface IAppState {
     router: RouterState,
     references: string[],
-    addNew: {
-        ingestFile: IIngestFileState,
-        editValues: IBloodTest | null
-    }
+    addNew: IAddNewState,
+    singleTest: IBloodTest | null
 }
 

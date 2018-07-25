@@ -1,7 +1,8 @@
-import { EditValuesActions, editValues } from "../../actions";
-import { getType } from "typesafe-actions";
+import * as editValues from "./actions";
+import { getType, ActionType } from "typesafe-actions";
 import { IBloodTest } from "../../model";
 
+export type EditValuesActions = ActionType< typeof editValues>
 type NullableBloodTest = IBloodTest | null;
 
 export default (state: NullableBloodTest = null, action: EditValuesActions): NullableBloodTest => {
@@ -16,6 +17,7 @@ export default (state: NullableBloodTest = null, action: EditValuesActions): Nul
         case getType(editValues.deleteEntry):
             return deleteEntry(state, action.payload.name)
         case getType(editValues.clearTest):
+            console.log('cleared');
             return null;
         default:
             return state  

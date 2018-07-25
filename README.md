@@ -39,7 +39,7 @@ Ocr will produce:
 - [x] Ability to remove test entry
 - [ ] Ability to add new entry 
 - [ ] List of all tests
-- [ ] Test edit/view
+- [x] Test edit/view
 - [ ] Enhance OCR quality (for now there is a problem with parsing more complex test entry keys than "MCV" or "PLT-Trombosit")
 - [ ] Statistics
     - [ ] Jupyter helper functions

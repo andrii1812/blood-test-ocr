@@ -1,17 +1,18 @@
 import * as React from "react";
-import {IBloodTest, IAppState} from '../model'
-import FileSelect from "../components/FileSelect";
-import ResultsDisplay from "../components/ResultsDisplay";
-import './app.scss'
+import {IBloodTest, IAppState, IUploadFile, IAddNewState} from '../../model'
+import FileSelect from "../../components/FileSelect";
+import TestEdit from "../TestEdit/TestEdit";
 import { Grid, CircularProgress } from "@material-ui/core";
-import { ingestFile, saveTest } from "../actions/addNew/ingestFile";
+import { ingestFile, fileSelected } from "./actions";
 import { connect } from "react-redux";
+import { SubspaceProvider } from "react-redux-subspace";
 
 interface IAddNewProps {
     references: string[],
-    ingestResults: IBloodTest,
+    ingestResults: IBloodTest | null,
     loading: boolean
-    ingestFile: () => void
+    ingestFile: () => void,
+    fileSelected: (file: IUploadFile) => void
 }
 
 const mapStateToProps = (state: IAppState) => ({
@@ -21,7 +22,8 @@ const mapStateToProps = (state: IAppState) => ({
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-    ingestFile: () => dispatch(ingestFile())
+    ingestFile: (): void => dispatch(ingestFile()),
+    fileSelected: (file: IUploadFile): void => dispatch(fileSelected(file)),
 })
 
 class AddNew extends React.Component<IAddNewProps> {
@@ -33,14 +35,16 @@ class AddNew extends React.Component<IAddNewProps> {
         return (
             <Grid container spacing={16} direction="column" justify="flex-end">
                 <Grid item>
-                    <FileSelect />
+                    <FileSelect fileSelected={this.props.fileSelected} submit={this.props.ingestFile}/>
                 </Grid>
                 {
                     this.props.loading && <CircularProgress style={{margin: '0 auto'}}/>
                 }
                 {this.props.ingestResults && 
                     (<Grid item>
-                        <ResultsDisplay/>
+                        <SubspaceProvider mapState={(s: IAppState) => s.addNew.editValues} namespace="editValues">
+                            <TestEdit title="Parsed Results" references={this.props.references}/>
+                        </SubspaceProvider>
                     </Grid>)
                 }
             </Grid>                 

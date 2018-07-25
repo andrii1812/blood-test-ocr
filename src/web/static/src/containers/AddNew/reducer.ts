@@ -1,6 +1,8 @@
 import { IIngestFileState, getIngestFileState } from "../../model";
-import { AddNewActions, addNew } from "../../actions";
-import { getType } from "typesafe-actions";
+import * as addNew from "./actions";
+import { getType, ActionType } from "typesafe-actions";
+
+export type AddNewActions = ActionType<typeof addNew>
 
 export default (state: IIngestFileState = getIngestFileState(), action: AddNewActions): IIngestFileState => {
     switch(action.type) {

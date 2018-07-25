@@ -1,35 +1,36 @@
 import React = require("react");
-import { IBloodTest, IAppState } from "../model";
+import { IBloodTest, IAppState } from "../../model";
 import { Card, CardHeader, CardText, RaisedButton, Divider, Table } from "material-ui";
-import TestResult from "./testResult/TestResult";
+import TestResult from "../../components/testResult/TestResult";
 import { CardActions, Grid, Typography, Paper } from "@material-ui/core";
-import { ImageView } from "./imageView/ImageView";
-import { saveTest } from "../actions/addNew/ingestFile";
+import { ImageView } from "../../components/imageView/ImageView";
 import { connect } from "react-redux";
-import { nameChanged, deleteEntry, valueChanged } from "../actions/addNew/editValues";
+import { nameChanged, deleteEntry, valueChanged, saveTest } from "./actions";
+import { namespacedAction } from "redux-subspace";
 
-interface IResultDisplayProps {
+interface ITestEditProps {
     data: IBloodTest,
     references: string[],
+    title: string,
     save: () => void,
     nameChanged: (name: string, newName: string) => void,
     valueChanged: (name: string, value: string) => void
     deleteEntry: (name: string) => void
 }
 
-const mapStateToProps = (state: IAppState) => ({
-    data: state.addNew.editValues,
-    references: state.references
+const mapStateToProps = (state: IBloodTest, props: any) => ({
+    data: state,
+    ...props
 })
 
-const mapDispatchToProps = (dispatch: any) => ({
-    save: () => dispatch(saveTest()),
-    nameChanged: (name: string, newName: string) => dispatch(nameChanged({name, newName})),
-    valueChanged: (name: string, value: string) => dispatch(valueChanged({name, value})),
-    deleteEntry: (name: string) => dispatch(deleteEntry({name}))
+const mapDispatchToProps = (dispatch: any, props: any) => ({
+    save: () => dispatch(namespacedAction(props.namespace)(saveTest())),
+    nameChanged: (name: string, newName: string) => dispatch(namespacedAction(props.namespace)(nameChanged({name, newName}))),
+    valueChanged: (name: string, value: string) => dispatch(namespacedAction(props.namespace)(valueChanged({name, value}))),
+    deleteEntry: (name: string) => dispatch(namespacedAction(props.namespace)(deleteEntry({name})))
 })
 
-class ResultsDisplay extends React.Component<IResultDisplayProps> {
+class TestEdit extends React.Component<ITestEditProps> {
     constructor(props: any) {
         super(props);
     }
@@ -48,7 +49,7 @@ class ResultsDisplay extends React.Component<IResultDisplayProps> {
         return (
             <Card>
                 <CardHeader>
-                    <Typography variant="title">Parsed Results</Typography>
+                    <Typography variant="title">{this.props.title}</Typography>
                 </CardHeader>
                 <CardText>    
                     <Grid container spacing={16}>                        
@@ -94,4 +95,4 @@ class ResultsDisplay extends React.Component<IResultDisplayProps> {
     }   
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ResultsDisplay)
+export default connect(mapStateToProps, mapDispatchToProps)(TestEdit)

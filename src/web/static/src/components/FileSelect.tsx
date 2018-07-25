@@ -1,19 +1,12 @@
 import * as React from "react";
 import { Card, CardHeader, CardText, CardActions, RaisedButton } from "material-ui";
 import Typography from "@material-ui/core/Typography";
-import { fileSelected, ingestFile } from "../actions/addNew/ingestFile";
-import { connect } from "react-redux";
 import { IUploadFile } from "../model";
 
 interface IFileSelectProps {
     fileSelected: (file: IUploadFile) => void,
     submit: () => void
 }
-
-const mapDispatchToProps = (dispatch: any) => ({
-    fileSelected: (file: IUploadFile) => dispatch(fileSelected(file)),
-    submit: () => dispatch(ingestFile())
-})
 
 class FileSelect extends React.Component<IFileSelectProps> {    
     constructor(props: IFileSelectProps){
@@ -51,4 +44,4 @@ class FileSelect extends React.Component<IFileSelectProps> {
     }
 }
 
-export default connect(null, mapDispatchToProps)(FileSelect);
+export default FileSelect;

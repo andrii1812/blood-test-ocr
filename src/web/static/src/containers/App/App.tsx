@@ -1,18 +1,22 @@
 import * as React from "react";
-import { IAppState } from "../model";
-import AddNew from "./AddNew";
-import {Route} from 'react-router-dom';
+import { IAppState } from "../../model";
+import { AddNew } from "../AddNew";
 import { Grid, List, ListItem, ListItemText, ListItemIcon, Hidden } from "@material-ui/core";
 import Add from '@material-ui/icons/Add';
 import ListIcon from "@material-ui/icons/List"
 import ChartIcon from "@material-ui/icons/ShowChart"
 import { connect } from "react-redux";
-import { loadReferenceValues } from "../actions/references";
-
-
+import { loadReferenceValues } from "./actions";
+import LoadSingleTest from "../LoadSingleTest/LoadSingleTest";
+import { withRouter } from "react-router";
+import { Switch, Route } from "react-router-dom";
 
 interface IAppProps {
     references: string[],
+    history: any,
+    location: any,
+    match: any,
+    staticContext: any
     loadReferenceValues: () => void
 }
 
@@ -24,6 +28,10 @@ const mapDispatchToProps = (dispatch: any) => ({
     loadReferenceValues: () => dispatch(loadReferenceValues())
 })
 
+const LoadTest = ({match}: {match: any}) => {
+    return <LoadSingleTest id={match.params.id}/>
+}
+
 class App extends React.Component<IAppProps> {
     constructor(props: any) {
         super(props);
@@ -34,11 +42,11 @@ class App extends React.Component<IAppProps> {
     }
 
     render() {
-        return (
+        return (         
                 <Grid container>
                     <Grid item md={2}>
                         <List component="nav">
-                            <ListItem button component="a" href="#/">
+                            <ListItem button component="a" href="#/add">
                                 <ListItemIcon>
                                     <Add/>
                                 </ListItemIcon>   
@@ -71,15 +79,19 @@ class App extends React.Component<IAppProps> {
                         </List>
                     </Grid>
                     <Grid item md={10}>
-                        <Route 
-                            path="/"
-                            exact
-                            component={AddNew}
-                        /> 
+                        <Switch>
+                            <Route 
+                                path="/add"
+                                exact
+                                component={AddNew}/>
+                            <Route 
+                                path='/test/:id'
+                                component={LoadTest}/>
+                        </Switch>
                     </Grid>                
                 </Grid>
         )
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
