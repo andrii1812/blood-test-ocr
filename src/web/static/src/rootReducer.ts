@@ -4,6 +4,7 @@ import appReducer from './containers/App/reducer';
 import testEditReducer from './containers/TestEdit/reducer';
 import { namespaced } from 'redux-subspace';
 import addNewReducer from './containers/AddNew/reducer';
+import testListReducer from './containers/TestList/reducer';
 
 export default combineReducers({
     router: routerReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
         ingestFile: addNewReducer,
         editValues: namespaced('editValues')(testEditReducer)
     }),
-    singleTest: namespaced('singleTest')(testEditReducer)
+    singleTest: namespaced('singleTest')(testEditReducer),
+    testList: namespaced('testList')(testListReducer)
 });

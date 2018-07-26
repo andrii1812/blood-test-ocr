@@ -38,7 +38,8 @@ Ocr will produce:
 - [ ] Add tag for the test (on frontend)
 - [x] Ability to remove test entry
 - [ ] Ability to add new entry 
-- [ ] List of all tests
+- [x] List of all tests
+- [x] Remove test
 - [x] Test edit/view
 - [ ] Enhance OCR quality (for now there is a problem with parsing more complex test entry keys than "MCV" or "PLT-Trombosit")
 - [ ] Statistics

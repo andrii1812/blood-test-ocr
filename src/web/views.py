@@ -42,7 +42,9 @@ def ingest_image():
 
 
 class Test(Resource):
-    def get(self, test_id):
+    def get(self, test_id=None):
+        if not test_id:
+            return orm.get_all_tests()
         return orm.get_test(test_id)
 
     def post(self):
@@ -53,6 +55,10 @@ class Test(Resource):
         tag = test_data.get('tag')
         test_id = orm.save_test(date, values, image_id, tag)
         return test_id
+
+    def delete(self, test_id):
+        orm.delete_test(test_id)
+        return '', 204
 
 
 @web.app.route('/find_test_id')

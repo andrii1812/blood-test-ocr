@@ -1,6 +1,7 @@
 import { IIngestFileState } from "./ingestFile";
 import { RouterState } from "react-router-redux";
 import { IBloodTest } from "./bloodTest";
+import { ITestList } from "./testList";
 
 export * from "./bloodTest"
 export * from "./testImage"
@@ -15,6 +16,7 @@ export interface IAppState {
     router: RouterState,
     references: string[],
     addNew: IAddNewState,
-    singleTest: IBloodTest | null
+    singleTest: IBloodTest | null,
+    testList: ITestList
 }
 

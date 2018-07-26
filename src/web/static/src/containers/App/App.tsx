@@ -10,6 +10,7 @@ import { loadReferenceValues } from "./actions";
 import LoadSingleTest from "../LoadSingleTest/LoadSingleTest";
 import { withRouter } from "react-router";
 import { Switch, Route } from "react-router-dom";
+import TestList from "../TestList/TestList";
 
 interface IAppProps {
     references: string[],
@@ -87,6 +88,9 @@ class App extends React.Component<IAppProps> {
                             <Route 
                                 path='/test/:id'
                                 component={LoadTest}/>
+                            <Route
+                                path='/test'
+                                component={TestList}/>                            
                         </Switch>
                     </Grid>                
                 </Grid>

@@ -1,6 +1,8 @@
 from pony import orm
 from orm.entities import *
 
+def format_date(date):
+    return date.strftime('%d.%m.%Y')
 
 @orm.db_session
 def get_all_reference_names():
@@ -14,7 +16,7 @@ def get_test(test_id):
         return {
             'id': test.id,
             'tag': test.tag,
-            'date': test.date.strftime('%d.%m.%Y'),
+            'date': format_date(test.date),
             'images': [{'id': i.id, 'path': i.url, 'width': i.width, 'height': i.height} for i in test.images],
             'values': [[v.name.name, v.value] for v in test.values]
         }
@@ -65,3 +67,20 @@ def find_test_id(date):
     test = select(s for s in BloodTest if s.date == date).first()
     if test:
         return test.id
+
+
+@orm.db_session
+def get_all_tests():
+    query = select((x.id, x.date, x.tag, len(x.values)) for x in BloodTest)
+    return [{
+        'id': x[0],
+        'date': format_date(x[1]),
+        'tag': x[2],
+        'numValues': x[3]
+    } for x in query]
+
+
+@orm.db_session
+def delete_test(test_id):
+    test = BloodTest[test_id]
+    test.delete()
