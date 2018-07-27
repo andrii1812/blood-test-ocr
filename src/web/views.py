@@ -52,9 +52,24 @@ class Test(Resource):
         date = test_data['date']
         values = test_data['values']
         image_id = test_data['images'][0]['id']
-        tag = test_data.get('tag')
+        tag = test_data['tag']
         test_id = orm.save_test(date, values, image_id, tag)
         return test_id
+
+    def put(self, test_id):
+        test_data = request.json
+        date = test_data['date']
+        values = test_data['values']
+        tag = test_data['tag']
+        orm.replace_test(test_id, date, values, tag)
+        return '', 204
+
+    def patch(self, test_id):
+        test_data = request.json
+        values = test_data.get('values', [])
+        tag = test_data.get('tag')
+        orm.update_test(test_id, values, tag)
+        return '', 204
 
     def delete(self, test_id):
         orm.delete_test(test_id)

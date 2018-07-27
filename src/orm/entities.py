@@ -22,13 +22,17 @@ class Tag(db.Entity):
     name = PrimaryKey(str)
     blood_tests = Set('BloodTest')
 
+    @staticmethod
+    def get_default():
+        return Tag.get(name=config.NONE_TAG_NAME)
+
 
 class BloodTest(db.Entity):
     id = PrimaryKey(int, auto=True)
     date = Required(datetime)
     values = Set('BloodTestEntry')
     images = Set('TestImage')
-    tag = Optional('Tag')
+    tag = Required('Tag', default=Tag.get_default)
 
 
 class TestImage(db.Entity):

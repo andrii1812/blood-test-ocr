@@ -1,8 +1,10 @@
 from pony import orm
 from orm.entities import *
 
+
 def format_date(date):
     return date.strftime('%d.%m.%Y')
+
 
 @orm.db_session
 def get_all_reference_names():
@@ -15,7 +17,7 @@ def get_test(test_id):
         test = BloodTest[test_id]
         return {
             'id': test.id,
-            'tag': test.tag,
+            'tag': test.tag.name,
             'date': format_date(test.date),
             'images': [{'id': i.id, 'path': i.url, 'width': i.width, 'height': i.height} for i in test.images],
             'values': [[v.name.name, v.value] for v in test.values]
@@ -33,25 +35,35 @@ def check_values(values):
             yield ref, val[1]
 
 
-def check_tag(tag):
-    return select(t.name == tag for t in Tag)
+def check_tag(tag_name):
+    tag = Tag.get(name=tag_name)
+    if not tag:
+        raise ValueError('"{0}" tag is not defined'.format(tag_name))
+    return tag
 
 
 @orm.db_session
 def save_test(date, values, image_id, tag):
-    date = datetime.strptime(date, '%d.%m.%Y')
-    parsed_values = check_values(values)
-    if tag:
-        tag = check_tag(tag)
+    date = parse_date(date)
+    tag = check_tag(tag)
 
     image = TestImage[image_id]
-    test_values = [BloodTestEntry(name=p[0], value=float(p[1])) for p in parsed_values]
+    test_values = create_test_values(values)
     test = BloodTest(date=date, values=test_values, images=[image], tag=tag)
-    if tag:
-        test.tag = check_tag(tag)
+    test.tag = tag
 
     orm.commit()
     return test.id
+
+
+def create_test_values(values):
+    parsed_values = check_values(values)
+    test_values = [BloodTestEntry(name=p[0], value=float(p[1])) for p in parsed_values]
+    return test_values
+
+
+def parse_date(date):
+    return datetime.strptime(date, '%d.%m.%Y')
 
 
 @orm.db_session
@@ -75,7 +87,7 @@ def get_all_tests():
     return [{
         'id': x[0],
         'date': format_date(x[1]),
-        'tag': x[2],
+        'tag': x[2].name,
         'numValues': x[3]
     } for x in query]
 
@@ -84,3 +96,35 @@ def get_all_tests():
 def delete_test(test_id):
     test = BloodTest[test_id]
     test.delete()
+
+
+@orm.db_session
+def replace_test(test_id, date, values, tag):
+    test = BloodTest[test_id]
+
+    test.date = parse_date(date)
+    test.tag = check_tag(tag)
+
+    for item in test.values:
+        item.delete()
+
+    test.values = create_test_values(values)
+
+
+@orm.db_session
+def update_test(test_id, values, tag):
+    test = BloodTest[test_id]
+
+    if tag:
+        test.tag = check_tag(tag)
+
+    for item in values:
+        name = item[0]
+        value = item[1]
+
+        item = select(t for t in BloodTestEntry if t.name == name and test in t.blood_tests)
+        if item:
+            item.value = value
+        else:
+            item = BloodTestEntry(name=name, value=value)
+            test.values.append(item)

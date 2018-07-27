@@ -61,6 +61,7 @@ def add_tags():
     Tag(name='Chemo1')
     Tag(name='Chemo2')
     Tag(name='SCT')
+    Tag(name=config.NONE_TAG_NAME)
 
 
 @db_session

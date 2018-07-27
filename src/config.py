@@ -5,3 +5,4 @@ DEBUG = True
 UPLOADS_DEFAULT_DEST = 'data/uploads/'
 UPLOADS_DEFAULT_URL = '/uploads/'
 UPLOADS_SET_NAME = 'images'
+NONE_TAG_NAME = 'None'
