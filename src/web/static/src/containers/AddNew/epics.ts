@@ -36,8 +36,8 @@ async function ingestFile(state: IAppState) {
         return;
     }
 
-    const res = await fetch(fileObj.url);
-    const file = await res.blob();
+    const file = await fetch(fileObj.url)
+                        .then(x => x.blob());
 
     const f = new File([file], fileObj.filename);
 
@@ -48,10 +48,17 @@ async function ingestFile(state: IAppState) {
     const data = new FormData();
     data.append('image', f);
 
-    const response = await fetch(urls.INGEST_IMAGE, {
-        method: 'POST',
-        body: data
-    })
-    const json = await response.json();
+    const json = await fetch(urls.INGEST_IMAGE, {
+                            method: 'POST',
+                            body: data
+                        }).then(x => x.json());
+
+    const id = await fetch(urls.findTestId(json.date))
+                                .then(x => x.text());
+
+    if (id) {
+        json.patchId = id;
+    }
+
     return json
 }

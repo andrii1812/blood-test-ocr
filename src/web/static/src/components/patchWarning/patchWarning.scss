@@ -1,0 +1,14 @@
+
+//$warning-color: #FFEB3B;
+$warning-color: #FBC02D;
+
+.warning-container {
+    padding: 8;
+    border-color: $warning-color;
+    border-style: solid;
+    border-width: 2px;
+
+    & .warning-icon, & .warning-text {
+        color: $warning-color;
+    }  
+}

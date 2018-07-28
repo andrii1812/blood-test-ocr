@@ -5,7 +5,8 @@ export interface IBloodTest {
     date: string,
     images: ITestImage[],
     values: string[][],
-    tag?: string | null
+    tag?: string | null,
+    patchId?: string
 }
 
 export const initialBloodTest = () => ({

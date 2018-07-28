@@ -9,15 +9,19 @@ import { flatMap, concat } from "rxjs/operators";
 import { fromPromise } from "rxjs/observable/fromPromise";
 import urls from "../../model/urls";
 import { push, RouterAction } from "react-router-redux";
-import { of } from "rxjs/observable/of";
 
 async function saveTestOp(ingestResults: IBloodTest) {
     let meta;
 
-    if (ingestResults.id) {
+    if (ingestResults.patchId) {
+        meta = {
+            method: 'PATCH',
+            url: urls.testId(ingestResults.patchId)
+        }
+    } else if (ingestResults.id) {
         meta = {
             method: 'PUT',
-            url: urls.testId(ingestResults.id)
+            url: urls.testId(ingestResults.id.toString())
         }
     } else {
         meta = {

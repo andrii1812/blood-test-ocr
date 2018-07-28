@@ -9,7 +9,7 @@ api = rest.Api(app)
 
 @app.errorhandler(Exception)
 def handle_error(error):
-    message = [str(x) for x in error.args]
+    message = str(error)
     status_code = getattr(error, 'code', 400)
 
     response = {

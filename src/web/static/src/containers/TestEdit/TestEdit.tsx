@@ -7,6 +7,8 @@ import { ImageView } from "../../components/imageView/ImageView";
 import { connect } from "react-redux";
 import { nameChanged, deleteEntry, valueChanged, saveTest } from "./actions";
 import { namespacedAction } from "redux-subspace";
+import Warning from '@material-ui/icons/Warning';
+import PatchWarning from "../../components/patchWarning/PatchWarning";
 
 interface ITestEditProps {
     data: IBloodTest,
@@ -32,7 +34,7 @@ const mapDispatchToProps = (dispatch: any, props: any) => ({
 
 class TestEdit extends React.Component<ITestEditProps> {
     constructor(props: any) {
-        super(props);
+        super(props);        
     }
 
     isSaveEnabled(): boolean {
@@ -58,14 +60,20 @@ class TestEdit extends React.Component<ITestEditProps> {
                                 Overall information
                             </Typography>                            
                         </Grid>
-                        <Grid item md={9}>                                                                                
-                            <Typography variant="body2">
-                                Date: {this.props.data.date}
-                            </Typography>
-                    
-                            {this.props.data.images.map((x, i) => {
-                                return <ImageView key={i} {...x}/>
-                            })}                                                                
+                        <Grid item md={9}>        
+                            <Grid container spacing={16} direction="column">                                                                         
+                                <Grid item>
+                                    <Typography variant="body2">
+                                        Date: {this.props.data.date}
+                                    </Typography>
+                                </Grid>
+                                {this.props.data.patchId && <PatchWarning/>}
+                                <Grid item>
+                                    {this.props.data.images.map((x, i) => {
+                                        return <ImageView key={i} {...x}/>
+                                    })}        
+                                </Grid>                                                        
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Grid container spacing={16}>                        

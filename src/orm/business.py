@@ -78,7 +78,9 @@ def find_test_id(date):
     date = datetime.strptime(date, '%d.%m.%Y')
     test = select(s for s in BloodTest if s.date == date).first()
     if test:
-        return test.id
+        return str(test.id)
+    else:
+        return ''
 
 
 @orm.db_session
