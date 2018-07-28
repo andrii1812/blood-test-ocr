@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import React = require("react");
 import { loadList, deleteTest } from "./actions";
-import { ITestListEntry, ITestList } from "../../model/testList";
+import { ITestListEntry } from "../../model/testList";
 import { namespacedAction } from "redux-subspace";
 import { Grid, CircularProgress, Paper, TableHead, TableBody, Table, TableRow, TableCell } from "@material-ui/core";
 import Delete from "@material-ui/icons/Delete";
@@ -9,6 +9,7 @@ import Edit from "@material-ui/icons/Edit";
 import { IAppState } from "../../model";
 import { push } from "connected-react-router";
 import './testList.scss'
+import { Translate } from "react-localize-redux";
 
 interface ITestListProps {
     list: ITestListEntry[],
@@ -43,7 +44,7 @@ class TestList extends React.Component<ITestListProps> {
     }
 
     TestListEntry = (el: ITestListEntry) => (
-        <TableRow key={el.id} className="test-list-entry" hover>
+        <TableRow key={el.id} hover>
             <TableCell>
                 {el.date}
             </TableCell>
@@ -54,10 +55,8 @@ class TestList extends React.Component<ITestListProps> {
                 {el.tag === null ? 'None' : el.tag}
             </TableCell>
             <TableCell>
-                <div className='delete-button'>
-                    <Edit onClick={() => this.editTest(el)}/>
-                    <Delete onClick={() => this.deleteTest(el)}/>                    
-                </div>
+                    <Edit onClick={() => this.editTest(el)} className="action"/>
+                    <Delete onClick={() => this.deleteTest(el)} className="action"/>                    
             </TableCell>
         </TableRow>
     )
@@ -78,10 +77,10 @@ class TestList extends React.Component<ITestListProps> {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>Date</TableCell>
-                            <TableCell>Test Entries</TableCell>
-                            <TableCell>Tag</TableCell>
-                            <TableCell>Actions</TableCell>
+                            <TableCell><Translate id="date">Date</Translate></TableCell>
+                            <TableCell><Translate id="testList.testEntries">Test Entries</Translate></TableCell>
+                            <TableCell><Translate id="testList.tag">Tag</Translate></TableCell>
+                            <TableCell><Translate id="testList.actions">Actions</Translate></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

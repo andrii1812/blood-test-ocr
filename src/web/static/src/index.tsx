@@ -16,6 +16,8 @@ import { createHashHistory } from 'history';
 import rootEpic from './rootEpic';
 import { createEpicMiddleware } from 'redux-subspace-observable';
 import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router'
+import { CssBaseline } from '@material-ui/core';
+import { LocalizeProvider } from "react-localize-redux";
 
 const history = createHashHistory();
 const rMiddleware = routerMiddleware(history);
@@ -35,11 +37,16 @@ function configureStore() {
 
 render(
     <Provider store={configureStore()}>
-        <ConnectedRouter history={history}>
-            <MuiThemeProvider muiTheme={getTheme()}>
-                <App/>
-            </MuiThemeProvider>
-        </ConnectedRouter>
+        <LocalizeProvider>        
+            <ConnectedRouter history={history}>
+                <MuiThemeProvider muiTheme={getTheme()}>
+                    <div>
+                        <CssBaseline/>
+                        <App/>
+                    </div>                
+                </MuiThemeProvider>
+            </ConnectedRouter>
+        </LocalizeProvider>
     </Provider>,
 
     document.getElementById('root')

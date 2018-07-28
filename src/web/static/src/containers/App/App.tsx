@@ -1,18 +1,20 @@
 import * as React from "react";
 import { IAppState } from "../../model";
 import { AddNew } from "../AddNew";
-import { Grid, List, ListItem, ListItemText, ListItemIcon, Hidden } from "@material-ui/core";
-import Add from '@material-ui/icons/Add';
-import ListIcon from "@material-ui/icons/List"
-import ChartIcon from "@material-ui/icons/ShowChart"
+import { Grid, Hidden } from "@material-ui/core";
 import { connect } from "react-redux";
 import { loadReferenceValues } from "./actions";
 import LoadSingleTest from "../LoadSingleTest/LoadSingleTest";
 import { withRouter } from "react-router";
 import { Switch, Route } from "react-router-dom";
 import TestList from "../TestList/TestList";
+import NavList from "../../components/NavList";
+import { withLocalize, LocalizeContextProps } from "react-localize-redux";
+import translations from '../../translation/translation';
+import TopBar from "../../components/TopBar";
+import {renderToStaticMarkup} from 'react-dom/server';
 
-interface IAppProps {
+interface IAppProps extends LocalizeContextProps {
     references: string[],
     history: any,
     location: any,
@@ -36,6 +38,20 @@ const LoadTest = ({match}: {match: any}) => {
 class App extends React.Component<IAppProps> {
     constructor(props: any) {
         super(props);
+
+        const languages = [
+            {name: 'English', code: 'EN'},
+            {name: 'Ukrainian', code: 'UA'}
+        ];
+
+        this.props.initialize({
+            languages: languages,
+            translation: translations,
+            options: {
+                renderToStaticMarkup,
+                defaultLanguage: 'EN'
+            }
+        });
     }
 
     componentDidMount() {
@@ -43,46 +59,19 @@ class App extends React.Component<IAppProps> {
     }
 
     render() {
-        return (         
-                <Grid container>
-                    <Grid item md={2}>
-                        <List component="nav">
-                            <ListItem button component="a" href="#/add">
-                                <ListItemIcon>
-                                    <Add/>
-                                </ListItemIcon>   
-                                <Hidden smDown>
-                                    <ListItemText>
-                                        Add new
-                                    </ListItemText>
-                                </Hidden>
-                            </ListItem>
-                            <ListItem button component="a" href="#/test">
-                                <ListItemIcon>
-                                    <ListIcon/>
-                                </ListItemIcon>
-                                <Hidden smDown> 
-                                    <ListItemText>
-                                        List all
-                                    </ListItemText>
-                                </Hidden>
-                            </ListItem>
-                            <ListItem button component="a" href="#/stat">
-                                <ListItemIcon>  
-                                    <ChartIcon/>
-                                </ListItemIcon> 
-                                <Hidden smDown>
-                                    <ListItemText>
-                                        Statistics
-                                    </ListItemText>
-                                </Hidden>
-                            </ListItem>
-                        </List>
-                    </Grid>
-                    <Grid item md={10}>
+        return (
+            <div>
+                <TopBar/>
+                <Grid container style={{paddingTop: 8}}>
+                    <Hidden smDown>
+                        <Grid item md={2}>
+                            <NavList/>
+                        </Grid>
+                    </Hidden>
+                    <Grid item sm={12} md={10} xs={12}>
                         <Switch>
                             <Route 
-                                path="/add"
+                                path="/"
                                 exact
                                 component={AddNew}/>
                             <Route 
@@ -94,8 +83,9 @@ class App extends React.Component<IAppProps> {
                         </Switch>
                     </Grid>                
                 </Grid>
+            </div>
         )
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App))
+export default withLocalize(withRouter(connect(mapStateToProps, mapDispatchToProps)(App)))

@@ -17,7 +17,6 @@ export default (state: NullableBloodTest = null, action: EditValuesActions): Nul
         case getType(editValues.deleteEntry):
             return deleteEntry(state, action.payload.name)
         case getType(editValues.clearTest):
-            console.log('cleared');
             return null;
         default:
             return state  

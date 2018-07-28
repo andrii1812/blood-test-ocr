@@ -1,0 +1,25 @@
+.edit-container {
+    min-width: 423px;
+
+    & > .actions-container {
+        align-self: flex-end;
+
+        & > .delete-icon {
+            cursor: pointer;
+        }
+    }
+
+    & .edit-input {
+        width: 187px;
+    }
+    
+    @media (min-width: 600px) {
+        width: 225px;
+    }
+
+    @media (min-width: 1150px) {
+        & .edit-input {
+            width: 320px;
+        }
+    }       
+}

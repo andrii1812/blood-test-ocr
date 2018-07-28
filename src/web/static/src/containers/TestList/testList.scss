@@ -1,16 +1,3 @@
-.test-list-entry {
-    .delete-button {
-        visibility: hidden;
-
-        & > svg {
-            cursor: pointer;
-            margin-right: 10px;
-        }
-    }
-
-    &:hover {
-        .delete-button {
-            visibility: visible;
-        }
-    }
+.action {
+    cursor: pointer;
 }

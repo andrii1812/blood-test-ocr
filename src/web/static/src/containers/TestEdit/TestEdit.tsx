@@ -1,14 +1,16 @@
 import React = require("react");
-import { IBloodTest, IAppState } from "../../model";
-import { Card, CardHeader, CardText, RaisedButton, Divider, Table } from "material-ui";
-import TestResult from "../../components/testResult/TestResult";
-import { CardActions, Grid, Typography, Paper } from "@material-ui/core";
+import { IBloodTest } from "../../model";
+import { Card, CardHeader, CardText, RaisedButton } from "material-ui";
+import { CardActions, Grid, Typography, TextField } from "@material-ui/core";
 import { ImageView } from "../../components/imageView/ImageView";
 import { connect } from "react-redux";
 import { nameChanged, deleteEntry, valueChanged, saveTest } from "./actions";
 import { namespacedAction } from "redux-subspace";
-import Warning from '@material-ui/icons/Warning';
 import PatchWarning from "../../components/patchWarning/PatchWarning";
+import ReferencetextInput from "../../components/ReferenceTextInput";
+import Delete from "@material-ui/icons/Delete";
+import { Translate } from "react-localize-redux";
+import './testEdit.scss'
 
 interface ITestEditProps {
     data: IBloodTest,
@@ -57,21 +59,27 @@ class TestEdit extends React.Component<ITestEditProps> {
                     <Grid container spacing={16}>                        
                         <Grid item md={3}>
                             <Typography variant="subheading">
-                                Overall information
+                                <Translate id="testEdit.overall">Overall information</Translate>
                             </Typography>                            
                         </Grid>
-                        <Grid item md={9}>        
+                        <Grid item md={9} sm={12} xs={12}>        
                             <Grid container spacing={16} direction="column">                                                                         
                                 <Grid item>
                                     <Typography variant="body2">
-                                        Date: {this.props.data.date}
+                                        <Translate id="date">Date</Translate>: {this.props.data.date}
                                     </Typography>
                                 </Grid>
                                 {this.props.data.patchId && <PatchWarning/>}
                                 <Grid item>
-                                    {this.props.data.images.map((x, i) => {
-                                        return <ImageView key={i} {...x}/>
-                                    })}        
+                                    <Grid container spacing={16}>
+                                        {this.props.data.images.map((x, i) => {                                            
+                                            return (
+                                                <Grid item key={i}>                                    
+                                                    <ImageView {...x}/>
+                                                </Grid>
+                                            )
+                                        })}   
+                                    </Grid>     
                                 </Grid>                                                        
                             </Grid>
                         </Grid>
@@ -79,24 +87,43 @@ class TestEdit extends React.Component<ITestEditProps> {
                     <Grid container spacing={16}>                        
                         <Grid item md={3}>
                             <Typography variant="subheading">
-                                Parsed values
+                                <Translate id='testEdit.parsedValues'>Parsed values</Translate>
                             </Typography>                            
                         </Grid>
-                        <Grid item md={9}>
+                        <Grid item md={9} sm={12} xs={12}>
+                            <Grid container spacing={16} direction='column'>
                             {this.props.data.values.map((x, index) => {
-                                return <TestResult 
-                                            key={index + '_test_result'} 
-                                            name={x[0]} value={x[1]} 
-                                            references={this.props.references}
-                                            onNameChange={this.props.nameChanged}
-                                            onValueChange={this.props.valueChanged}
-                                            onDelete={this.props.deleteEntry}/>
-                            })}      
+                                const name = x[0], value = x[1];
+                                return (<Grid item key={index}>
+                                    <Grid container spacing={8} alignItems="baseline" className="edit-container">                                
+                                        <Grid item>
+                                            <ReferencetextInput                                            
+                                                name={name} 
+                                                value={name} 
+                                                references={this.props.references}
+                                                onChange={this.props.nameChanged}/>
+                                            </Grid>
+                                        <Grid item>
+                                            <TextField
+                                                className="edit-input"
+                                                id={name + '_value'} 
+                                                value={value} 
+                                                onChange={(e: any) => this.props.valueChanged(name, e.target.value)}/>
+                                        </Grid>
+                                        <Grid item onClick={() => this.props.deleteEntry(name)} className="actions-container">
+                                            <Delete className="delete-icon"/>
+                                        </Grid>                                    
+                                    </Grid>
+                                </Grid>)
+                            })}
+                            </Grid>
                         </Grid>
                     </Grid>                    
                 </CardText>
                 <CardActions>
-                    <RaisedButton primary label="save" disabled={!this.isSaveEnabled()}  onClick={this.props.save}/>
+                    <Translate>
+                      {({translate}) => <RaisedButton primary label={translate('testEdit.save')} disabled={!this.isSaveEnabled()}  onClick={this.props.save}/>}  
+                    </Translate>                        
                 </CardActions>
             </Card>
         )

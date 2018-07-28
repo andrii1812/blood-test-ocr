@@ -34,7 +34,7 @@ Ocr will produce:
 - [x] Redux
 - [x] React router
 - [x] Save new
-- [ ] Update (PATCH) existing with new values
+- [x] Update (PATCH) existing with new values
 - [ ] Add tag for the test (on frontend)
 - [x] Ability to remove test entry
 - [ ] Ability to add new entry 

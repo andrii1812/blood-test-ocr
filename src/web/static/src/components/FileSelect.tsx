@@ -2,6 +2,7 @@ import * as React from "react";
 import { Card, CardHeader, CardText, CardActions, RaisedButton } from "material-ui";
 import Typography from "@material-ui/core/Typography";
 import { IUploadFile } from "../model";
+import { Translate } from "react-localize-redux";
 
 interface IFileSelectProps {
     fileSelected: (file: IUploadFile) => void,
@@ -31,13 +32,17 @@ class FileSelect extends React.Component<IFileSelectProps> {
         return (
             <Card>
                 <CardHeader>
-                    <Typography variant="title">Input File</Typography>
+                    <Typography variant="title">
+                        <Translate id='fileSelect.title'>Input File</Translate>
+                    </Typography>
                 </CardHeader>
                 <CardText>
                     <input type='file' onChange={this.handleFileChange.bind(this)}/>
                 </CardText>
                 <CardActions>
-                    <RaisedButton primary label="Submit" onClick={this.selectSubmit.bind(this)}/>
+                    <Translate>
+                      {({translate}) => <RaisedButton primary label={translate('fileSelect.submit')} onClick={this.selectSubmit.bind(this)}/>}  
+                    </Translate>
                 </CardActions>
             </Card>
         )

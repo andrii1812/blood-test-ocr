@@ -3,6 +3,7 @@ import { Paper } from "material-ui";
 import { Typography, Grid } from "@material-ui/core";
 import Warning from "@material-ui/icons/Warning";
 import './patchWarning.scss'
+import { Translate } from "react-localize-redux";
 
 export default (_: any) => (
     <Grid item>
@@ -13,7 +14,7 @@ export default (_: any) => (
                         <Warning className="warning-icon"/>
                     </Grid>
                     <Grid item className="warning-text">
-                        Warning! The test with current date is already exists! The values below will be added to this test
+                        <Translate id="patchWarning">The test with current date is already exists! The values below will be added to this test</Translate>
                     </Grid>
                 </Grid>
             </Typography>

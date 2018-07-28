@@ -32,7 +32,7 @@ class BloodTest(db.Entity):
     date = Required(datetime)
     values = Set('BloodTestEntry')
     images = Set('TestImage')
-    tag = Required('Tag', default=Tag.get_default)
+    tag = Required('Tag')
 
 
 class TestImage(db.Entity):

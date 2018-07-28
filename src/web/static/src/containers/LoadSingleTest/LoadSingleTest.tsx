@@ -7,7 +7,7 @@ import { loadTest } from "./actions";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Grid } from "@material-ui/core";
 import { namespacedAction } from "redux-subspace";
-import { clearTest } from "../TestEdit/actions";
+import { Translate } from "react-localize-redux";
 
 interface ILoadSingleTestProps {
     references: string[],
@@ -50,7 +50,9 @@ class LoadSingleTest extends React.Component<ILoadSingleTestProps> {
 
         return (
             <SubspaceProvider mapState={(s: IAppState) => s.singleTest} namespace="singleTest">
-                <TestEdit title="Single Test" references={this.props.references}/>
+                <Translate>
+                    {({translate}) => <TestEdit title={translate('singleTest')} references={this.props.references}/>}
+                </Translate>
             </SubspaceProvider>
         )
     }

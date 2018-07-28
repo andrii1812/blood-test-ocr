@@ -14,6 +14,7 @@
     "node-sass": "^4.9.2",
     "parcel-bundler": "^1.9.7",
     "parcel-plugin-typescript": "^1.0.0",
+    "react-localize-redux": "^3.3.0",
     "react-redux-subspace": "^2.5.0",
     "react-router-dom": "^4.3.1",
     "redux": "3.7.2",
@@ -28,8 +29,10 @@
     "typescript": "^2.9.2"
   },
   "dependencies": {
+    "ma": "^0.0.7",
     "material-ui": "^0.20.1",
     "re": "^0.1.4",
+    "rea": "^0.0.1",
     "react": "^15.4.0 || ^16.0.0",
     "react-dom": "^15.4.0 || ^16.0.0",
     "react-redux": "^5.0.0",

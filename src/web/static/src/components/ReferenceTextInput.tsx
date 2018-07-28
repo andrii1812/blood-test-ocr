@@ -1,6 +1,7 @@
 import React = require("react");
-import { TextField, MenuItem } from "material-ui";
-import { FormControl, InputLabel, Input, FormHelperText, Select } from "@material-ui/core";
+import { MenuItem } from "material-ui";
+import { FormControl, FormHelperText, Select } from "@material-ui/core";
+import { Translate } from "react-localize-redux";
 
 interface IReferencetextInputProps {
     name: string;
@@ -21,14 +22,6 @@ export default class ReferencetextInput extends React.Component<IReferencetextIn
         return this.props.references.indexOf(this.props.value) !== -1;
     }
 
-    getErrorText(): string {
-        if (this.isValid()) {
-            return '';
-        }
-
-        return 'Invalid value';
-    }
-
     onChange(e: any) {
         this.props.onChange(this.props.name, e.target.value);
     }
@@ -36,7 +29,8 @@ export default class ReferencetextInput extends React.Component<IReferencetextIn
     render() {
         return (
             <FormControl error={!this.isValid()}>
-                <Select value={this.props.value} style={{width: 256}} onChange={this.onChange.bind(this)}>
+                <Select 
+                    value={this.props.value} onChange={this.onChange.bind(this)} className="edit-input">
                     {
                         this.props.references.map((x, i) => {
                             return <MenuItem key={i} value={x}>{x}</MenuItem>
@@ -47,7 +41,7 @@ export default class ReferencetextInput extends React.Component<IReferencetextIn
                             <MenuItem value={this.props.value}>{this.props.value}</MenuItem>                        
                     }
                 </Select>
-                {!this.isValid() && <FormHelperText>Invalid value</FormHelperText>}
+                {!this.isValid() && <FormHelperText><Translate id="invalidValue">Invalid value</Translate></FormHelperText>}
             </FormControl>            
         )
     }

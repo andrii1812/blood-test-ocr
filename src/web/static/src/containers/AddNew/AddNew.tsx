@@ -1,18 +1,22 @@
 import * as React from "react";
-import {IBloodTest, IAppState, IUploadFile, IAddNewState} from '../../model'
+import {IBloodTest, IAppState, IUploadFile } from '../../model'
 import FileSelect from "../../components/FileSelect";
 import TestEdit from "../TestEdit/TestEdit";
 import { Grid, CircularProgress } from "@material-ui/core";
 import { ingestFile, fileSelected } from "./actions";
 import { connect } from "react-redux";
 import { SubspaceProvider } from "react-redux-subspace";
+import { Translate } from "react-localize-redux";
+import { clearTest } from "../TestEdit/actions";
+import { namespacedAction } from "redux-subspace";
 
 interface IAddNewProps {
     references: string[],
     ingestResults: IBloodTest | null,
     loading: boolean
     ingestFile: () => void,
-    fileSelected: (file: IUploadFile) => void
+    fileSelected: (file: IUploadFile) => void,
+    clearTest: () => void
 }
 
 const mapStateToProps = (state: IAppState) => ({
@@ -24,11 +28,16 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = (dispatch: any) => ({
     ingestFile: (): void => dispatch(ingestFile()),
     fileSelected: (file: IUploadFile): void => dispatch(fileSelected(file)),
+    clearTest: () => dispatch(namespacedAction('editValues')(clearTest()))
 })
 
 class AddNew extends React.Component<IAddNewProps> {
     constructor(props: IAddNewProps) {
         super(props);
+    }
+
+    componentDidMount(){
+        this.props.clearTest();
     }
 
     render() {
@@ -43,7 +52,9 @@ class AddNew extends React.Component<IAddNewProps> {
                 {this.props.ingestResults && 
                     (<Grid item>
                         <SubspaceProvider mapState={(s: IAppState) => s.addNew.editValues} namespace="editValues">
-                            <TestEdit title="Parsed Results" references={this.props.references}/>
+                            <Translate>
+                                {({translate}) => <TestEdit title={translate('parsedResults')} references={this.props.references}/>}
+                            </Translate>
                         </SubspaceProvider>
                     </Grid>)
                 }

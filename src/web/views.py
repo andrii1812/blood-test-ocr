@@ -52,7 +52,7 @@ class Test(Resource):
         date = test_data['date']
         values = test_data['values']
         image_id = test_data['images'][0]['id']
-        tag = test_data['tag']
+        tag = test_data.get('tag')
         test_id = orm.save_test(date, values, image_id, tag)
         return test_id
 
@@ -68,7 +68,12 @@ class Test(Resource):
         test_data = request.json
         values = test_data.get('values', [])
         tag = test_data.get('tag')
-        orm.update_test(test_id, values, tag)
+        images = test_data.get('images')
+        if images:
+            image_id = images[0]['id']
+        else:
+            image_id = None
+        orm.update_test(test_id, values, tag, image_id)
         return '', 204
 
     def delete(self, test_id):

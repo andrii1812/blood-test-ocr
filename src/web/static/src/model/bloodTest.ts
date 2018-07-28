@@ -1,7 +1,7 @@
 import { ITestImage } from "./testImage";
 
 export interface IBloodTest {
-    id?: number,
+    id?: string,
     date: string,
     images: ITestImage[],
     values: string[][],

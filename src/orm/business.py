@@ -45,12 +45,14 @@ def check_tag(tag_name):
 @orm.db_session
 def save_test(date, values, image_id, tag):
     date = parse_date(date)
-    tag = check_tag(tag)
+    if tag:
+        tag = check_tag(tag)
+    else:
+        tag = Tag.get_default()
 
     image = TestImage[image_id]
     test_values = create_test_values(values)
     test = BloodTest(date=date, values=test_values, images=[image], tag=tag)
-    test.tag = tag
 
     orm.commit()
     return test.id
@@ -114,19 +116,23 @@ def replace_test(test_id, date, values, tag):
 
 
 @orm.db_session
-def update_test(test_id, values, tag):
+def update_test(test_id, values, tag, image_id):
     test = BloodTest[test_id]
 
     if tag:
         test.tag = check_tag(tag)
 
+    if image_id:
+        image = TestImage[image_id]
+        test.images.add(image)
+
     for item in values:
         name = item[0]
         value = item[1]
 
-        item = select(t for t in BloodTestEntry if t.name == name and test in t.blood_tests)
+        item = select(t for t in BloodTestEntry if t.name.name == name and test in t.blood_tests)
         if item:
             item.value = value
         else:
             item = BloodTestEntry(name=name, value=value)
-            test.values.append(item)
+            test.values.add(item)
