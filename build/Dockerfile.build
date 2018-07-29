@@ -1,7 +1,6 @@
-FROM node
+FROM node:alpine
 
 VOLUME /app 
 WORKDIR /app
 
-ENTRYPOINT ["build-fresh.sh"]
-
+ENTRYPOINT ["/bin/sh", "build-fresh.sh"]
