@@ -2,10 +2,12 @@
     min-width: 423px;
 
     & > .actions-container {
-        align-self: flex-end;
+        height: 40px;
+        align-self: center;
 
-        & > .delete-icon {
+        & .delete-icon {
             cursor: pointer;
+            display: block;
         }
     }
 
@@ -21,5 +23,13 @@
         & .edit-input {
             width: 320px;
         }
-    }       
+    }   
+    
+    .name-input {
+        height: 60px;
+    }
+}
+
+.tag-select {
+    width: 187px;
 }

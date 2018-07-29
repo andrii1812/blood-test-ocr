@@ -24,3 +24,5 @@ export interface IDeletePayload {
 export const deleteEntry = createStandardAction('DELETE_ENTRY')<IDeletePayload>();
 
 export const saveTest = createStandardAction('SAVE_TEST')();
+
+export const tagChanged = createStandardAction('TAG_CHANGED')<string>();

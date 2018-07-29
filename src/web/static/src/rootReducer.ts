@@ -8,7 +8,7 @@ import testListReducer from './containers/TestList/reducer';
 
 export default combineReducers({
     router: routerReducer,
-    references: appReducer,
+    app: appReducer,
     addNew: combineReducers({
         ingestFile: addNewReducer,
         editValues: namespaced('editValues')(testEditReducer)

@@ -22,10 +22,6 @@ class Tag(db.Entity):
     name = PrimaryKey(str)
     blood_tests = Set('BloodTest')
 
-    @staticmethod
-    def get_default():
-        return Tag.get(name=config.NONE_TAG_NAME)
-
 
 class BloodTest(db.Entity):
     id = PrimaryKey(int, auto=True)

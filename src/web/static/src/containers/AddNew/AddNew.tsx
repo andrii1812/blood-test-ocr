@@ -12,6 +12,7 @@ import { namespacedAction } from "redux-subspace";
 
 interface IAddNewProps {
     references: string[],
+    tags: string[],
     ingestResults: IBloodTest | null,
     loading: boolean
     ingestFile: () => void,
@@ -22,7 +23,8 @@ interface IAddNewProps {
 const mapStateToProps = (state: IAppState) => ({
     ingestResults: state.addNew.editValues,
     loading: state.addNew.ingestFile.loading,
-    references: state.references
+    references: state.app.references,
+    tags: state.app.tags,
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
@@ -53,7 +55,10 @@ class AddNew extends React.Component<IAddNewProps> {
                     (<Grid item>
                         <SubspaceProvider mapState={(s: IAppState) => s.addNew.editValues} namespace="editValues">
                             <Translate>
-                                {({translate}) => <TestEdit title={translate('parsedResults')} references={this.props.references}/>}
+                                {({translate}) => <TestEdit 
+                                                        title={translate('parsedResults')} 
+                                                        references={this.props.references}
+                                                        tags={this.props.tags}/>}
                             </Translate>
                         </SubspaceProvider>
                     </Grid>)

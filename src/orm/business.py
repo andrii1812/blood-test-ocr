@@ -48,7 +48,7 @@ def save_test(date, values, image_id, tag):
     if tag:
         tag = check_tag(tag)
     else:
-        tag = Tag.get_default()
+        tag = get_default_tag()
 
     image = TestImage[image_id]
     test_values = create_test_values(values)
@@ -136,3 +136,13 @@ def update_test(test_id, values, tag, image_id):
         else:
             item = BloodTestEntry(name=name, value=value)
             test.values.add(item)
+
+
+@orm.db_session
+def get_tags():
+    return [x.name for x in Tag.select()]
+
+
+@orm.db_session
+def get_default_tag():
+    return Tag.get(name=config.NONE_TAG_NAME)

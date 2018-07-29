@@ -5,7 +5,7 @@ export interface IBloodTest {
     date: string,
     images: ITestImage[],
     values: string[][],
-    tag?: string | null,
+    tag?: string,
     patchId?: string
 }
 

@@ -12,9 +12,14 @@ export interface IAddNewState {
     editValues: IBloodTest | null
 }
 
+export interface IAppValuesState {
+    references: string[],
+    tags: string[],
+}
+
 export interface IAppState {
     router: RouterState,
-    references: string[],
+    app: IAppValuesState,
     addNew: IAddNewState,
     singleTest: IBloodTest | null,
     testList: ITestList

@@ -11,13 +11,15 @@ import { Translate } from "react-localize-redux";
 
 interface ILoadSingleTestProps {
     references: string[],
+    tags: string[],
     id: string,
     test: IBloodTest | null,
     loadTest: (id: string) => void
 }
 
 const mapStateToProps = (state: IAppState, props: any) => ({
-    references: state.references,
+    references: state.app.references,
+    tags: state.app.tags,
     test: state.singleTest,
     ...props
 })
@@ -51,7 +53,10 @@ class LoadSingleTest extends React.Component<ILoadSingleTestProps> {
         return (
             <SubspaceProvider mapState={(s: IAppState) => s.singleTest} namespace="singleTest">
                 <Translate>
-                    {({translate}) => <TestEdit title={translate('singleTest')} references={this.props.references}/>}
+                    {({translate}) => <TestEdit 
+                                            title={translate('singleTest')} 
+                                            references={this.props.references}
+                                            tags={this.props.tags}/>}
                 </Translate>
             </SubspaceProvider>
         )

@@ -38,6 +38,7 @@ def ingest_image():
 
     result = test._asdict()
     result['images'] = [{'id': image_id, 'path': url, 'width': image.width, 'height': image.height}]
+    result['tag'] = orm.get_default_tag().name
     return jsonify(result)
 
 
@@ -87,3 +88,8 @@ def find_test():
     if not date:
         return abort(400)
     return orm.find_test_id(date)
+
+
+@web.app.route('/tag')
+def get_tags():
+    return jsonify(orm.get_tags())

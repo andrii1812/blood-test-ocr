@@ -17,6 +17,7 @@ export default {
         save: ['Save', 'Зберегти']
     },
     date: [null, 'Дата'],
+    tag: [null, 'Тег'],
     testList: {
         testEntries: [null, 'Всього показників'],
         tag: [null, 'Тег'],

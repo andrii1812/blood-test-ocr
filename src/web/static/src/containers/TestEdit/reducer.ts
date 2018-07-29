@@ -18,12 +18,17 @@ export default (state: NullableBloodTest = null, action: EditValuesActions): Nul
             return deleteEntry(state, action.payload.name)
         case getType(editValues.clearTest):
             return null;
+        case getType(editValues.tagChanged):
+            if(!state) {
+                throw new Error('edit on null data');
+            }
+            return {...state, tag: action.payload}
         default:
             return state  
     }
 }
 
-function nameChanged(state: NullableBloodTest, name: string, newName: string): NullableBloodTest{
+function nameChanged(state: NullableBloodTest, name: string, newName: string) {
     if(!state) {
         throw new Error('edit on null data');
     }

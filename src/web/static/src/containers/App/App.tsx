@@ -1,9 +1,9 @@
 import * as React from "react";
-import { IAppState } from "../../model";
+import { IAppState, IAppValuesState } from "../../model";
 import { AddNew } from "../AddNew";
-import { Grid, Hidden } from "@material-ui/core";
+import { Grid, Hidden, CircularProgress } from "@material-ui/core";
 import { connect } from "react-redux";
-import { loadReferenceValues } from "./actions";
+import { loadReferenceValues, loadTags } from "./actions";
 import LoadSingleTest from "../LoadSingleTest/LoadSingleTest";
 import { withRouter } from "react-router";
 import { Switch, Route } from "react-router-dom";
@@ -15,20 +15,22 @@ import TopBar from "../../components/TopBar";
 import {renderToStaticMarkup} from 'react-dom/server';
 
 interface IAppProps extends LocalizeContextProps {
-    references: string[],
+    data: IAppValuesState,
     history: any,
     location: any,
     match: any,
     staticContext: any
-    loadReferenceValues: () => void
+    loadReferenceValues: () => void,
+    loadTags: () => void
 }
 
 const mapStateToProps = (state: IAppState) => ({
-    references: state.references
+    data: state.app
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-    loadReferenceValues: () => dispatch(loadReferenceValues())
+    loadReferenceValues: () => dispatch(loadReferenceValues()),
+    loadTags: () => dispatch(loadTags())
 })
 
 const LoadTest = ({match}: {match: any}) => {
@@ -56,9 +58,20 @@ class App extends React.Component<IAppProps> {
 
     componentDidMount() {
         this.props.loadReferenceValues();
+        this.props.loadTags();
     }
 
     render() {
+        if (!this.props.data.references || ! this.props.data.tags) {
+            return (
+                <Grid container justify="center">
+                    <Grid item>
+                        <CircularProgress style={{margin: '0 auto'}}/>
+                    </Grid>
+                </Grid>
+            )
+        }
+
         return (
             <div>
                 <TopBar/>
