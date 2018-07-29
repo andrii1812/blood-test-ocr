@@ -30,6 +30,10 @@ Ocr will produce:
 }
 ```
 
+## How to build and run
+1. run ```build.sh``` from the project root
+2. execute ```docker run -d -p 80:80 --name ocr ocr-backend```
+
 ## Todo
 - [x] Redux
 - [x] React router
