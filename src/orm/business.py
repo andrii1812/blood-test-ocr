@@ -11,6 +11,16 @@ def get_all_reference_names():
     return [item.name for item in ReferenceName.select()]
 
 
+def format_image(i):
+    return {
+        'id': i.id,
+        'path': i.url,
+        'width': i.width,
+        'height': i.height,
+        'tests': len(i.tests)
+    }
+
+
 @orm.db_session
 def get_test(test_id):
     try:
@@ -19,7 +29,7 @@ def get_test(test_id):
             'id': test.id,
             'tag': test.tag.name,
             'date': format_date(test.date),
-            'images': [{'id': i.id, 'path': i.url, 'width': i.width, 'height': i.height} for i in test.images],
+            'images': [format_image(i) for i in test.images],
             'values': [[v.name.name, v.value] for v in test.values]
         }
     except ObjectNotFound:
@@ -146,3 +156,28 @@ def get_tags():
 @orm.db_session
 def get_default_tag():
     return Tag.get(name=config.NONE_TAG_NAME)
+
+
+@orm.db_session
+def get_all_images():
+    return [format_image(i) for i in TestImage.select()]
+
+
+def get_base_path():
+    return os.path.join(
+        os.path.dirname(__file__),
+        '..',
+        config.UPLOADS_DEFAULT_DEST,
+        config.UPLOADS_SET_NAME)
+
+
+@orm.db_session
+def get_image_path(image_id):
+    filename = select(x.filename for x in TestImage if x.id == image_id).first()
+    base = get_base_path()
+    return os.path.join(base, filename)
+
+
+@orm.db_session
+def get_image(image_id):
+    return format_image(TestImage[image_id])

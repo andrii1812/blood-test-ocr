@@ -42,7 +42,7 @@ async function saveTestOp(ingestResults: IBloodTest) {
     } else if (ingestResults.patchId) {
         return '/test/' + ingestResults.patchId;
     } else {
-        return '/test/' + parseInt(await response.text());    
+        return '/test';    
     }
 }
 

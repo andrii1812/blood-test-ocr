@@ -1,8 +1,7 @@
 import { createStandardAction } from "typesafe-actions";
-import { IBloodTest, IAppState } from "../../model";
-import urls from "../../model/urls";
-import { push } from "react-router-redux";
+import { IBloodTest } from "../../model";
 
+export const loadTest = createStandardAction('LOAD_TEST')<string>();
 export const testLoaded = createStandardAction('TEST_LOADED')<IBloodTest>();
 export const clearTest = createStandardAction('CLEAR_TEST')();
 

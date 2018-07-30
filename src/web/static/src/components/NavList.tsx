@@ -3,6 +3,7 @@ import React = require("react");
 import Add from '@material-ui/icons/Add';
 import ListIcon from "@material-ui/icons/List"
 import ChartIcon from "@material-ui/icons/ShowChart"
+import Collections from "@material-ui/icons/Collections"
 import { Translate } from "react-localize-redux";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { StaticContext } from "react-router";
@@ -10,7 +11,8 @@ import { StaticContext } from "react-router";
 class NavList extends React.Component<RouteComponentProps<{}, StaticContext>> {
     state = {
         items: [
-            {href: '#/', icon: Add, trKey: 'navlist.addNew'},
+            {href: '#/', icon: Collections, trKey: 'navlist.images'},
+            {href: '#/add', icon: Add, trKey: 'navlist.addNew'},
             {href: '#/test', icon: ListIcon, trKey: 'navlist.list'},
             {href: '#/stat', icon: ChartIcon, trKey: 'navlist.stat'}
         ]

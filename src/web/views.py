@@ -19,6 +19,36 @@ def uploaded_file(filename):
                                filename)
 
 
+@web.app.route('/image', methods=['POST'])
+def upload_image():
+    image_obj = request.files['image']
+    filename = web.images.save(image_obj)
+    url = web.images.url(filename)
+
+    image_obj.stream.seek(0)
+    image = Image.open(image_obj.stream)
+    image_id = orm.save_image(filename, url, image.width, image.height)
+    return str(image_id)
+
+
+@web.app.route('/image')
+def get_all_images():
+    images = orm.get_all_images()
+    return jsonify(images)
+
+
+@web.app.route('/image/<int:image_id>/parse')
+def parse_existing(image_id):
+    image_path = orm.get_image_path(image_id)
+    with open(image_path, 'rb') as image_stream:
+        image = Image.open(image_stream)
+        test = ocr.parse_image(image)
+        result = test._asdict()
+        result['images'] = [orm.get_image(image_id)]
+        result['tag'] = orm.get_default_tag().name
+        return jsonify(result)
+
+
 @web.app.route('/reference_names')
 def reference_names():
     return jsonify(orm.get_all_reference_names())

@@ -6,7 +6,7 @@ export type EditValuesActions = ActionType< typeof editValues>
 type NullableBloodTest = IBloodTest | null;
 
 export default (state: NullableBloodTest = null, action: EditValuesActions): NullableBloodTest => {
-    switch(action.type) {
+    switch(action.type) {        
         case getType(editValues.testLoaded):
             return {...action.payload}
         case getType(editValues.nameChanged):
@@ -16,6 +16,7 @@ export default (state: NullableBloodTest = null, action: EditValuesActions): Nul
             return valueChanged(state, action.payload.name, action.payload.value)
         case getType(editValues.deleteEntry):
             return deleteEntry(state, action.payload.name)
+        case getType(editValues.loadTest):
         case getType(editValues.clearTest):
             return null;
         case getType(editValues.tagChanged):

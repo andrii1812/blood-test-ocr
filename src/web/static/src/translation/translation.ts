@@ -1,6 +1,7 @@
 export default {
     'title': [null, 'Розпізнавання Аналізів'],
     navlist: {
+        images: ['Images', 'Зображення'],
         addNew: ['Add New', 'Додати новий'],
         list: ['List All', 'Список аналізів'],
         stat: ['Statistics', 'Статистика']
@@ -24,5 +25,9 @@ export default {
         actions: [null, 'Дії']
     },
     parsedResults: ['Parsed Results', 'Результати розпізнавання'],
-    singleTest: ['Test Edit', 'Редагування Аналізу']
+    singleTest: ['Test Edit', 'Редагування Аналізу'],
+    uploadedImages: {
+        title: [null, 'Завантажені зображення'],
+        noImages: [null, 'Не завантажено жодного зображення']
+    }
 }

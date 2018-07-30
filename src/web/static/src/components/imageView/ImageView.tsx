@@ -27,7 +27,7 @@ export class ImageView extends React.Component<ITestImage, IImageViewState> {
 
     render() {
         return (
-            <Paper>
+            <div>
                 <div onClick={this.openModal.bind(this)}>
                     <img src={this.props.path} width={this.width} height={getScaledHeight(this.props, this.width)}/>
                 </div>
@@ -38,7 +38,7 @@ export class ImageView extends React.Component<ITestImage, IImageViewState> {
                         <img src={this.props.path} width={600} height={getScaledHeight(this.props, 600)}/>
                     </div>
                 </Modal>
-            </Paper>
+            </div>
         )
     }
 }

@@ -5,7 +5,7 @@ import  * as addNew from "./actions";
 import urls from "../../model/urls";
 import { AnyAction } from "redux";
 import { flatMap } from "rxjs/operators";
-import { IAppState } from "../../model";
+import { IAppState, getFileFromBlobUrl } from "../../model";
 import { testLoaded, clearTest } from "../TestEdit/actions";
 import { namespacedAction } from "redux-subspace";
 import { fromPromise } from "rxjs/observable/fromPromise";
@@ -32,14 +32,7 @@ async function ingestFile(state: IAppState) {
         return;
     }
 
-    const file = await fetch(fileObj.url)
-                        .then(x => x.blob());
-
-    const f = new File([file], fileObj.filename);
-
-    if (!file) {
-        return;
-    }
+    const f = await getFileFromBlobUrl(fileObj);
 
     const data = new FormData();
     data.append('image', f);

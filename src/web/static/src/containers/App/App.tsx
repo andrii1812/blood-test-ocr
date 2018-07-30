@@ -13,6 +13,8 @@ import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import translations from '../../translation/translation';
 import TopBar from "../../components/TopBar";
 import {renderToStaticMarkup} from 'react-dom/server';
+import UploadedImages from "../UploadedImages/UploadedImages";
+import ParseExisting from "../ParseExisting/ParseExisting";
 
 interface IAppProps extends LocalizeContextProps {
     data: IAppValuesState,
@@ -86,6 +88,12 @@ class App extends React.Component<IAppProps> {
                             <Route 
                                 path="/"
                                 exact
+                                component={UploadedImages}/>
+                            <Route 
+                                path="/parse/:id"                                
+                                component={ParseExisting}/>
+                            <Route 
+                                path="/add"
                                 component={AddNew}/>
                             <Route 
                                 path='/test/:id'

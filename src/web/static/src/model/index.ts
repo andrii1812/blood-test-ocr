@@ -2,6 +2,7 @@ import { IIngestFileState } from "./ingestFile";
 import { RouterState } from "react-router-redux";
 import { IBloodTest } from "./bloodTest";
 import { ITestList } from "./testList";
+import { ITestImage } from "./testImage";
 
 export * from "./bloodTest"
 export * from "./testImage"
@@ -17,11 +18,19 @@ export interface IAppValuesState {
     tags: string[],
 }
 
+export interface IUploadedImagesState {
+    images: ITestImage[] | null,
+    upload: boolean,
+    imagesLoaded: boolean
+}
+
 export interface IAppState {
     router: RouterState,
     app: IAppValuesState,
     addNew: IAddNewState,
     singleTest: IBloodTest | null,
-    testList: ITestList
+    testList: ITestList,
+    uploadedImages: IUploadedImagesState,
+    parseExisting: IBloodTest | null,
 }
 

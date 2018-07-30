@@ -5,6 +5,7 @@ import testEditReducer from './containers/TestEdit/reducer';
 import { namespaced } from 'redux-subspace';
 import addNewReducer from './containers/AddNew/reducer';
 import testListReducer from './containers/TestList/reducer';
+import uploadedImagesReducer from './containers/UploadedImages/reducer';
 
 export default combineReducers({
     router: routerReducer,
@@ -14,5 +15,7 @@ export default combineReducers({
         editValues: namespaced('editValues')(testEditReducer)
     }),
     singleTest: namespaced('singleTest')(testEditReducer),
-    testList: namespaced('testList')(testListReducer)
+    testList: namespaced('testList')(testListReducer),
+    uploadedImages: uploadedImagesReducer,
+    parseExisting: namespaced('parseExisting')(testEditReducer),
 });

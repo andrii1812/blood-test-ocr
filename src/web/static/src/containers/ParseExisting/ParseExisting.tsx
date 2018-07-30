@@ -9,7 +9,7 @@ import { namespacedAction } from "redux-subspace";
 import { Translate } from "react-localize-redux";
 import { loadTest } from "../TestEdit/actions";
 
-interface ILoadSingleTestProps {
+interface IParseExistingTestProps {
     references: string[],
     tags: string[],
     id: string,
@@ -20,20 +20,24 @@ interface ILoadSingleTestProps {
 const mapStateToProps = (state: IAppState, props: any) => ({
     references: state.app.references,
     tags: state.app.tags,
-    test: state.singleTest,
+    test: state.parseExisting,
+    id: props.match.params.id,
     ...props
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-    loadTest: (id: string) => dispatch(namespacedAction('singleTest')(loadTest(id))),
+    loadTest: (id: string) => dispatch(namespacedAction('parseExisting')(loadTest(id))),
 })
 
-class LoadSingleTest extends React.Component<ILoadSingleTestProps> {
+class ParseExistingTest extends React.Component<IParseExistingTestProps> {
     componentDidMount(){
+        if (!this.props.id) {
+            return;
+        }
         this.props.loadTest(this.props.id);
     }
 
-    componentWillReceiveProps(newProps: ILoadSingleTestProps) {
+    componentWillReceiveProps(newProps: IParseExistingTestProps) {
         if (newProps.id !== this.props.id) {
             this.props.loadTest(newProps.id);
         }
@@ -51,10 +55,10 @@ class LoadSingleTest extends React.Component<ILoadSingleTestProps> {
         }
 
         return (
-            <SubspaceProvider mapState={(s: IAppState) => s.singleTest} namespace="singleTest">
+            <SubspaceProvider mapState={(s: IAppState) => s.parseExisting} namespace="parseExisting">
                 <Translate>
                     {({translate}) => <TestEdit 
-                                            title={translate('singleTest')} 
+                                            title={translate('parsedResults')} 
                                             references={this.props.references}
                                             tags={this.props.tags}/>}
                 </Translate>
@@ -63,4 +67,4 @@ class LoadSingleTest extends React.Component<ILoadSingleTestProps> {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoadSingleTest);
+export default connect(mapStateToProps, mapDispatchToProps)(ParseExistingTest);
