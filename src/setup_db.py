@@ -1,5 +1,3 @@
-import os
-
 from orm.entities import *
 from pony.orm import db_session
 

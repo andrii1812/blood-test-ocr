@@ -40,5 +40,8 @@ class TestImage(db.Entity):
     tests = Set('BloodTest')
 
 
+path = os.path.join(config.UPLOADS_DEFAULT_DEST, config.UPLOADS_SET_NAME)
+if not os.path.exists(path):
+    os.makedirs(path)
 db.bind('sqlite', os.path.join('..', config.DATABASE_PATH), create_db=True)
 db.generate_mapping(create_tables=True)
