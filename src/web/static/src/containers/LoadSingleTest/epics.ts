@@ -1,5 +1,5 @@
 import { namespacedAction } from "redux-subspace";
-import { testLoaded, loadTest } from "../TestEdit/actions";
+import { testLoaded, loadTest, loadTestFailed } from "../TestEdit/actions";
 import { ActionsObservable, ofType } from "redux-observable";
 import { AnyAction, Store, MiddlewareAPI } from "redux";
 import { Observable } from "rxjs";
@@ -12,8 +12,13 @@ export const loadSingleTestEpic = (action$: ActionsObservable<AnyAction>, _: Mid
         ofType(getType(loadTest)),
         switchMap(x => 
             fetch(urls.testId(x.payload))
-                .then(x => x.json())
-                .then(x => testLoaded(x))
+                .then(async x => {
+                    if (!x.ok) {
+                        return loadTestFailed()
+                    }
+
+                    return testLoaded(await x.json());
+                })
         )
     )
 }

@@ -1,4 +1,4 @@
-import { testLoaded, loadTest } from "../TestEdit/actions";
+import { testLoaded, loadTest, loadTestFailed } from "../TestEdit/actions";
 import { ActionsObservable, ofType } from "redux-observable";
 import { AnyAction, MiddlewareAPI } from "redux";
 import { Observable } from "rxjs";
@@ -11,8 +11,13 @@ export const parseExistingEpic = (action$: ActionsObservable<AnyAction>, _: Midd
         ofType(getType(loadTest)),
         switchMap(x => 
             fetch(urls.parseExistingImage(x.payload))
-                .then(x => x.json())
-                .then(x => testLoaded(x))
+                .then(async x => {
+                    if (!x.ok) {
+                        return loadTestFailed()
+                    }
+
+                    return testLoaded(await x.json());
+                })
         )
     )
 }

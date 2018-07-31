@@ -29,5 +29,6 @@ export default {
     uploadedImages: {
         title: [null, 'Завантажені зображення'],
         noImages: [null, 'Не завантажено жодного зображення']
-    }
+    },
+    parseFailed: [null, 'Розпізнавання невдале']
 }

@@ -6,7 +6,7 @@ import urls from "../../model/urls";
 import { AnyAction } from "redux";
 import { flatMap } from "rxjs/operators";
 import { IAppState, getFileFromBlobUrl } from "../../model";
-import { testLoaded, clearTest } from "../TestEdit/actions";
+import { testLoaded, clearTest, loadTestFailed, loadTest, loadTestStarted } from "../TestEdit/actions";
 import { namespacedAction } from "redux-subspace";
 import { fromPromise } from "rxjs/observable/fromPromise";
 
@@ -16,16 +16,20 @@ export const addNewEpic = (action$: ActionsObservable<AnyAction>, store: any) : 
     return action$.pipe(
         ofType(getType(addNew.ingestFile)),
         flatMap(() => new Observable<AnyAction>(observer => {
-            observer.next(addNew.ingestStarted());
             observer.next(namespacedAction('editValues')(clearTest()));
-            fromPromise(ingestFile(store.getState())
-                .then(x => observer.next(testLoadedNamespaced(x)))
-                .then(() => observer.next(addNew.ingestSucceed())));
+            observer.next(namespacedAction('editValues')(loadTestStarted()));            
+            fromPromise(ingestFile(
+                store.getState(), 
+                () => observer.next(namespacedAction('editValues')(loadTestFailed())))
+                .then(x => {
+                    if(!x) return;
+                    observer.next(testLoadedNamespaced(x))
+                }))
         }))
     )
 }
 
-async function ingestFile(state: IAppState) {
+async function ingestFile(state: IAppState, onError: () => void) {
     const fileObj = state.addNew.ingestFile.file;
 
     if (!fileObj) {
@@ -37,13 +41,26 @@ async function ingestFile(state: IAppState) {
     const data = new FormData();
     data.append('image', f);
 
-    const json = await fetch(urls.INGEST_IMAGE, {
-                            method: 'POST',
-                            body: data
-                        }).then(x => x.json());
+
+    const json = 
+        await fetch(
+            urls.INGEST_IMAGE, {
+                method: 'POST',
+                body: data
+            }).then(x => {
+                if (!x.ok) {
+                    onError();
+                    return;
+                }
+                return x.json()
+            });
+
+    if (!json) {         
+        return;
+    }
 
     const id = await fetch(urls.findTestId(json.date))
-                                .then(x => x.text());
+                                .then(x => x.text());    
 
     if (id) {
         json.patchId = id;

@@ -8,9 +8,21 @@ export * from "./bloodTest"
 export * from "./testImage"
 export * from "./ingestFile"
 
+export enum TestEditLoading {
+    INITIAL,
+    LOADING,
+    LOAD_SUCCESS,
+    LOAD_FAILURE
+}
+
+export interface ITestEditState {
+    test: IBloodTest | null,
+    state: TestEditLoading
+}
+
 export interface IAddNewState {
     ingestFile: IIngestFileState,
-    editValues: IBloodTest | null
+    editValues: ITestEditState
 }
 
 export interface IAppValuesState {
@@ -28,9 +40,9 @@ export interface IAppState {
     router: RouterState,
     app: IAppValuesState,
     addNew: IAddNewState,
-    singleTest: IBloodTest | null,
+    singleTest: ITestEditState,
     testList: ITestList,
     uploadedImages: IUploadedImagesState,
-    parseExisting: IBloodTest | null,
+    parseExisting: ITestEditState,
 }
 

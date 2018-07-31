@@ -1,19 +1,20 @@
 import * as React from "react";
 import { SubspaceProvider } from "react-redux-subspace";
 import {TestEdit} from "../TestEdit";
-import { IAppState, IBloodTest } from "../../model";
+import { IAppState, IBloodTest, TestEditLoading, ITestEditState } from "../../model";
 import { connect } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Grid } from "@material-ui/core";
 import { namespacedAction } from "redux-subspace";
 import { Translate } from "react-localize-redux";
 import { loadTest } from "../TestEdit/actions";
+import ParseFailed from "../../components/ParseFailed";
 
 interface IParseExistingTestProps {
     references: string[],
     tags: string[],
     id: string,
-    test: IBloodTest | null,
+    test: ITestEditState,
     loadTest: (id: string) => void
 }
 
@@ -44,7 +45,7 @@ class ParseExistingTest extends React.Component<IParseExistingTestProps> {
     }
     
     render() {
-        if (this.props.test === null) {
+        if (this.props.test.state === TestEditLoading.LOADING || this.props.test.state === TestEditLoading.INITIAL) {
             return (
                 <Grid container justify="center">
                     <Grid item>
@@ -54,8 +55,12 @@ class ParseExistingTest extends React.Component<IParseExistingTestProps> {
             )
         }
 
+        if (this.props.test.state === TestEditLoading.LOAD_FAILURE) {
+            return <ParseFailed/>
+        }
+
         return (
-            <SubspaceProvider mapState={(s: IAppState) => s.parseExisting} namespace="parseExisting">
+            <SubspaceProvider mapState={(s: IAppState) => s.parseExisting.test} namespace="parseExisting">
                 <Translate>
                     {({translate}) => <TestEdit 
                                             title={translate('parsedResults')} 

@@ -1,7 +1,9 @@
 import { createStandardAction } from "typesafe-actions";
 import { IBloodTest } from "../../model";
 
+export const loadTestStarted = createStandardAction('LOAD_TEST_STARTED')();
 export const loadTest = createStandardAction('LOAD_TEST')<string>();
+export const loadTestFailed = createStandardAction('LOAD_TEST_FAILED')();
 export const testLoaded = createStandardAction('TEST_LOADED')<IBloodTest>();
 export const clearTest = createStandardAction('CLEAR_TEST')();
 
