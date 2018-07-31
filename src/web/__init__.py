@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from flask import Flask
 import flask_restful as rest
 from flask_uploads import UploadSet, IMAGES, configure_uploads
@@ -5,6 +6,7 @@ from flask_uploads import UploadSet, IMAGES, configure_uploads
 app = Flask(__name__)
 app.config.from_pyfile('../config.py')
 api = rest.Api(app)
+load_dotenv()
 
 
 @app.errorhandler(Exception)
