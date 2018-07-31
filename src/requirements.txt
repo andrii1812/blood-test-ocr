@@ -9,6 +9,7 @@ MarkupSafe==1.0
 Pillow==5.2.0
 pony==0.7.3
 pyocr==0.5.1
+python-dotenv==0.8.2
 python-Levenshtein==0.12.0
 pytz==2018.5
 six==1.11.0
