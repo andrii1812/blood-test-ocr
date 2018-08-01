@@ -53,7 +53,7 @@ function nameChanged(state: ITestEditState, name: string, newName: string) {
         return [newName, x[1]]
     })
 
-    return {...state, values: newArray};
+    return {...state, test: {...state.test, values: newArray}};
 }
 
 function valueChanged(state: ITestEditState, name: string, value:string) {
@@ -71,7 +71,7 @@ function valueChanged(state: ITestEditState, name: string, value:string) {
         return [name, value]
     })
 
-    return {...state, values: newArray};
+    return {...state, test: {...state.test, values: newArray}};
 }
 
 function deleteEntry(state: ITestEditState, name: string) {
@@ -82,5 +82,5 @@ function deleteEntry(state: ITestEditState, name: string) {
     let index = state.test.values.findIndex(x => x[0] === name);
     const newArray = state.test.values;
     newArray.splice(index, 1);
-    return {...state, values: newArray};
+    return {...state, test: {...state.test, values: newArray}};
 }

@@ -19,7 +19,7 @@ def uploaded_file(filename):
                                filename)
 
 
-class Image(Resource):
+class ImageRes(Resource):
     def get(self, image_id=None):
         if image_id:
             return jsonify(orm.get_image(image_id))
@@ -45,9 +45,10 @@ class Image(Resource):
 @web.app.route('/image/<int:image_id>/parse')
 def parse_existing(image_id):
     image_path = orm.get_image_path(image_id)
+    references = orm.get_all_reference_names()
     with open(image_path, 'rb') as image_stream:
         image = Image.open(image_stream)
-        test = ocr.parse_image(image)
+        test = ocr.parse_image(image, references)
         result = test._asdict()
         result['images'] = [orm.get_image(image_id)]
         result['tag'] = orm.get_default_tag().name
@@ -61,10 +62,11 @@ def reference_names():
 
 @web.app.route('/ingest_image', methods=['POST'])
 def ingest_image():
-    image_obj = request.files['image']
+    references = orm.get_all_reference_names()
 
+    image_obj = request.files['image']
     image = Image.open(image_obj.stream)
-    test = ocr.parse_image(image)
+    test = ocr.parse_image(image, references)
 
     image_obj.stream.seek(0)
     filename = web.images.save(image_obj)

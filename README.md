@@ -35,13 +35,13 @@ Ocr will produce:
 - [x] React router
 - [x] Save new
 - [x] Update (PATCH) existing with new values
-- [ ] Add tag for the test (on frontend)
+- [x] Add tag for the test (on frontend)
 - [x] Ability to remove test entry
 - [ ] Ability to add new entry 
 - [x] List of all tests
 - [x] Remove test
 - [x] Test edit/view
-- [ ] Enhance OCR quality (for now there is a problem with parsing more complex test entry keys than "MCV" or "PLT-Trombosit")
+- [x] Enhance OCR quality (for now there is a problem with parsing more complex test entry keys than "MCV" or "PLT-Trombosit")
 - [ ] Statistics
     - [ ] Jupyter helper functions
     - [ ] Standalone graphs

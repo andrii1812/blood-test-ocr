@@ -1,5 +1,3 @@
-import os
-
 import web
 from orm.cleanup import clean_up_unused_images
 from orm.setup import seed_db
@@ -18,4 +16,6 @@ def clean_uploads():
 
 
 if __name__ == '__main__':
-    app.run(host=os.getenv('HOST'), port=os.getenv('PORT'), debug=True)
+    web.ocr.test()
+    #app.run(host=os.getenv('HOST'), port=os.getenv('PORT'), debug=True)
+    pass

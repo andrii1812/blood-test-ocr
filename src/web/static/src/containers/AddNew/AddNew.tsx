@@ -49,7 +49,6 @@ class AddNew extends React.Component<IAddNewProps> {
                 <Grid item>
                     <FileSelect fileSelected={this.props.fileSelected} submit={this.props.ingestFile}/>
                 </Grid>
-                <ParseFailed/>
                 {
                     this.props.loadState === TestEditLoading.LOAD_FAILURE && <ParseFailed/>
                 }

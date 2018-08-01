@@ -1,5 +1,6 @@
 import re
 import Levenshtein as Lev
+import logging
 
 from ocr import constants
 
@@ -52,7 +53,10 @@ def remove_junk_words(line):
         for i, word in enumerate(line):
             is_junk_word = False
             for junk_word in constants.JUNK_WORDS:
-                if Lev.distance(word, junk_word) <= constants.JUNK_WORD_THRESHOLD and i > 0 and not is_float(word):
+                if Lev.distance(word, junk_word) <= constants.JUNK_WORD_THRESHOLD \
+                        and i > 0 \
+                        and not is_float(word) \
+                        and not (i == 1 and word in constants.PERCENT_OR_HASH):
                     is_junk_word = True
                     break
             if is_junk_word:
@@ -78,4 +82,53 @@ def join_all_except_last(line):
 def add_zero_values(line):
     if len(line) < 2:
         line.append(0.0)
+    return line
+
+
+def log_lines(lines):
+    boxes = [l.word_boxes for l in lines]
+    text = '\n'.join([', '.join([('"' + b.content + '"') for b in bl]) for bl in boxes])
+    logging.debug(text)
+
+
+def find_line_with_text_in_list(reference_list, lines):
+    for i, line in enumerate(lines):
+        for box in line.word_boxes:
+            if any(map(lambda x: box.content == x, reference_list)):
+                return i, line
+
+
+def join_percent_or_hash(line):
+    index = -1
+    found_word = None
+    for i, word in enumerate(line):
+        if word in constants.PERCENT_OR_HASH:
+            index = i
+            found_word = word
+            break
+
+    if index == -1 or index == 0:
+        return line
+
+    line.remove(found_word)
+    line[index - 1] += found_word
+    return line
+
+
+def replace_long_dash(line):
+    word = line[0]
+    word = word.replace('\u2014', '-')
+    line[0] = word
+    return line
+
+
+def replace_confident_values(line, references):
+    word = line[0]
+
+    for ref in references:
+        if 1 - Lev.distance(word, ref) / len(ref) > constants.CONFIDENCE:
+            word = ref
+            break
+
+    line[0] = word
     return line

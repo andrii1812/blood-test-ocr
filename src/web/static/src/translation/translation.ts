@@ -21,6 +21,7 @@ export default {
     tag: [null, 'Тег'],
     testList: {
         testEntries: [null, 'Всього показників'],
+        testImages: [null, 'Зображень'],
         tag: [null, 'Тег'],
         actions: [null, 'Дії']
     },

@@ -1,3 +1,4 @@
+import logging
 from dotenv import load_dotenv
 from flask import Flask
 import flask_restful as rest
@@ -7,6 +8,8 @@ app = Flask(__name__)
 app.config.from_pyfile('../config.py')
 api = rest.Api(app)
 load_dotenv()
+
+logging.basicConfig(level=logging.DEBUG if app.debug else logging.INFO)
 
 
 @app.errorhandler(Exception)
@@ -28,4 +31,4 @@ configure_uploads(app, images)
 from web.views import *
 
 api.add_resource(Test, '/test/<int:test_id>', '/test')
-api.add_resource(Image, '/image/<int:image_id>', '/image')
+api.add_resource(ImageRes, '/image/<int:image_id>', '/image')

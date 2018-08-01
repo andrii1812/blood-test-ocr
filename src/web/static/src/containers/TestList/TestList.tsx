@@ -52,6 +52,9 @@ class TestList extends React.Component<ITestListProps> {
                 {el.numValues}
             </TableCell>
             <TableCell>
+                {el.numImages}
+            </TableCell>
+            <TableCell>
                 {el.tag === null ? 'None' : el.tag}
             </TableCell>
             <TableCell>
@@ -79,6 +82,7 @@ class TestList extends React.Component<ITestListProps> {
                         <TableRow>
                             <TableCell><Translate id="date">Date</Translate></TableCell>
                             <TableCell><Translate id="testList.testEntries">Test Entries</Translate></TableCell>
+                            <TableCell><Translate id="testList.testImages">Test Images</Translate></TableCell>
                             <TableCell><Translate id="testList.tag">Tag</Translate></TableCell>
                             <TableCell><Translate id="testList.actions">Actions</Translate></TableCell>
                         </TableRow>

@@ -97,12 +97,13 @@ def find_test_id(date):
 
 @orm.db_session
 def get_all_tests():
-    query = select((x.id, x.date, x.tag, len(x.values)) for x in BloodTest)
+    query = select((x.id, x.date, x.tag, len(x.values), len(x.images)) for x in BloodTest)
     return [{
         'id': x[0],
         'date': format_date(x[1]),
         'tag': x[2].name,
-        'numValues': x[3]
+        'numValues': x[3],
+	'numImages': x[4],
     } for x in query]
 
 
