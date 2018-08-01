@@ -28,3 +28,4 @@ configure_uploads(app, images)
 from web.views import *
 
 api.add_resource(Test, '/test/<int:test_id>', '/test')
+api.add_resource(Image, '/image/<int:image_id>', '/image')

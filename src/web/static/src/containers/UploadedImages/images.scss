@@ -1,0 +1,9 @@
+.image-actions-container {
+    cursor: pointer;
+    padding: 5px;
+    position: relative;
+
+    & .image-action {
+        margin-left: 10px;
+    }
+}

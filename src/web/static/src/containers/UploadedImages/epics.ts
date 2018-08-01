@@ -1,10 +1,10 @@
 import { ActionsObservable, ofType, combineEpics } from "redux-observable";
 import { AnyAction, MiddlewareAPI } from "redux";
 import { Observable } from "rxjs";
-import { getType } from "typesafe-actions";
+import { getType, action } from "typesafe-actions";
 import { flatMap } from "rxjs/operators";
 import urls from "../../model/urls";
-import { loadImages, loadImagesFinished, saveImage, saveImageFinished } from "./actions";
+import { loadImages, loadImagesFinished, saveImage, saveImageFinished, deleteImage, deleteImageSuccess, deleteImageFailure } from "./actions";
 import { IUploadFile, getFileFromBlobUrl, ITestImage } from "../../model";
 
 const loadListEpic = (action$: ActionsObservable<AnyAction>) : Observable<AnyAction> => {
@@ -44,4 +44,19 @@ const saveImageEpic = (action$: ActionsObservable<AnyAction>) : Observable<AnyAc
     )
 }
 
-export default combineEpics(loadListEpic, saveImageEpic)
+const deleteImageEpic = (action$: ActionsObservable<AnyAction>) : Observable<AnyAction> => {
+    return action$.pipe(
+        ofType(getType(deleteImage)),
+        flatMap(action => 
+            fetch(urls.imageId(action.payload.id))
+                .then(x => {
+                    if(x.ok){
+                        return deleteImageSuccess(action.payload)
+                    }
+                    return deleteImageFailure()
+                })                
+        )
+    )
+}
+
+export default combineEpics(loadListEpic, saveImageEpic, deleteImageEpic)

@@ -3,12 +3,15 @@ import { Grid, CircularProgress, Typography, Button } from "@material-ui/core";
 import FileSelect from "../../components/FileSelect";
 import { IUploadFile, IAppState, ITestImage } from "../../model";
 import { Card, CardText, CardHeader, Paper } from "material-ui";
-import { saveImage, loadImages } from "./actions";
+import { saveImage, loadImages, deleteImage } from "./actions";
 import { connect } from "react-redux";
 import { Translate } from "react-localize-redux";
 import { ImageView } from "../../components/imageView/ImageView";
 import AddToPhotos from '@material-ui/icons/AddToPhotos';
 import { push } from "react-router-redux";
+import Clear from "@material-ui/icons/Clear";
+
+import './images.scss'
 
 interface IUploadedImagesProps {
     images: ITestImage[] | null,
@@ -16,7 +19,8 @@ interface IUploadedImagesProps {
     isImagesLoaded: boolean
     saveFile: (file: IUploadFile) => void
     loadImages: () => void,
-    parseExisting: (id: number | undefined) => void
+    parseExisting: (id: number) => void,
+    remove: (image: ITestImage) => void,
 }
 
 interface IUploadedImagesState {
@@ -32,7 +36,8 @@ const mapStateToProps = (state: IAppState) => ({
 const mapDispatchToProps = (dispatch: any) => ({
     saveFile: (file: IUploadFile) => dispatch(saveImage(file)),
     loadImages: () => dispatch(loadImages()),
-    parseExisting: (id: number | undefined) => id && dispatch(push('/parse/' + id.toString()))
+    parseExisting: (id: number) => id && dispatch(push('/parse/' + id.toString())),
+    remove: (image: ITestImage) => image && dispatch(deleteImage(image))
 })
 
 class UploadedImages extends React.Component<IUploadedImagesProps, IUploadedImagesState> {
@@ -78,15 +83,16 @@ class UploadedImages extends React.Component<IUploadedImagesProps, IUploadedImag
                             <Grid container spacing={16} wrap="wrap">
                             {this.props.images && this.props.images.map((image, index) =>
                                 <Grid item key={index}>
-                                    <Paper>
-                                    <ImageView {...image}/>
-                                    <Grid container justify="flex-end">
-                                        <Grid item>
-                                            <div style={{cursor:'pointer', padding:5}} onClick={() => this.props.parseExisting(image.id)}>
-                                                <AddToPhotos/>
-                                            </div>
+                                    <Paper>                                        
+                                        <ImageView {...image}/>
+                                        <Grid container justify="flex-end" className="image-actions-container">
+                                            <Grid item className="image-action">                     
+                                                <AddToPhotos onClick={() => image.id && this.props.parseExisting(image.id)}/>                                                   
+                                            </Grid>
+                                            <Grid item className="image-action" onClick={() => image.id && this.props.remove(image)}>
+                                                <Clear/>
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
                                     </Paper>
                                 </Grid>
                             )}

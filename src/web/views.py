@@ -19,22 +19,27 @@ def uploaded_file(filename):
                                filename)
 
 
-@web.app.route('/image', methods=['POST'])
-def upload_image():
-    image_obj = request.files['image']
-    filename = web.images.save(image_obj)
-    url = web.images.url(filename)
+class Image(Resource):
+    def get(self, image_id=None):
+        if image_id:
+            return jsonify(orm.get_image(image_id))
 
-    image_obj.stream.seek(0)
-    image = Image.open(image_obj.stream)
-    image_id = orm.save_image(filename, url, image.width, image.height)
-    return str(image_id)
+        images = orm.get_all_images()
+        return jsonify(images)
 
+    def post(self):
+        image_obj = request.files['image']
+        filename = web.images.save(image_obj)
+        url = web.images.url(filename)
 
-@web.app.route('/image')
-def get_all_images():
-    images = orm.get_all_images()
-    return jsonify(images)
+        image_obj.stream.seek(0)
+        image = Image.open(image_obj.stream)
+        image_id = orm.save_image(filename, url, image.width, image.height)
+        return str(image_id)
+
+    def delete(self, image_id):
+        orm.delete_image(image_id)
+        return '', 204
 
 
 @web.app.route('/image/<int:image_id>/parse')

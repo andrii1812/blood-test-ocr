@@ -21,6 +21,17 @@ export default (state: IUploadedImagesState = initState, action: UploadedImagesA
             return {...state, upload: false}
         case getType(uploadImages.loadImagesFinished):
             return {...state, images: action.payload, imagesLoaded: true}
+        case getType(uploadImages.deleteImageSuccess):
+            if (!state.images) { 
+                return state
+            }
+
+            const index = state.images.indexOf(action.payload)
+            const list = [
+                ...state.images.slice(0, index),
+                ...state.images.slice(index + 1)
+            ];
+            return {...state, images: list}
         default:
             return state  
     }

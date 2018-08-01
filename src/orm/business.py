@@ -181,3 +181,13 @@ def get_image_path(image_id):
 @orm.db_session
 def get_image(image_id):
     return format_image(TestImage[image_id])
+
+
+@orm.db_session
+def delete_image(image_id):
+    image = TestImage[image_id]
+
+    if len(image.tests) != 0:
+        raise ValueError('cannot delete image that used in tests')
+
+    image.delete()
