@@ -37,5 +37,5 @@ def test():
             lines = pickle.load(file)
 
     log_lines(lines)
-    tests = image_parse.get_blood_test_values(lines)
+    tests = image_parse.get_blood_test_values(lines, [])
     print(tests)

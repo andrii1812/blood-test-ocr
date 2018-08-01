@@ -26,13 +26,17 @@ def get_blood_test_values(lines, references):
 
     index, line = res
     blood_values_lines = lines[index + 1:]
-    blood_values_lines = util.clean_empty_lines(blood_values_lines)
-    blood_values_lines = util.clean_signature(blood_values_lines)
-    blood_values_lines = util.to_list_of_strings(blood_values_lines)
-    blood_values_lines = [util.remove_junk_words(line) for line in blood_values_lines]
-    blood_values_lines = [util.join_percent_or_hash(line) for line in blood_values_lines]
-    blood_values_lines = [util.join_all_except_last(line) for line in blood_values_lines]
-    blood_values_lines = [util.replace_long_dash(line) for line in blood_values_lines]
-    blood_values_lines = [util.replace_confident_values(line, references) for line in blood_values_lines]
-    blood_values_lines = [util.add_zero_values(line) for line in blood_values_lines]
-    return blood_values_lines
+
+    return util.pipeline(
+        [
+            util.clean_signature,
+            util.to_list_of_strings,
+            util.for_word(util.remove_junk_words),
+            util.for_word(util.join_percent_or_hash),
+            util.for_word(util.join_all_except_last),
+            util.for_word(util.replace_long_dash),
+            util.for_word(lambda x: util.replace_confident_values(x, references)),
+            util.for_word(util.add_zero_values),
+        ],
+        blood_values_lines
+    )

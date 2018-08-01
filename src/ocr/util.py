@@ -132,3 +132,15 @@ def replace_confident_values(line, references):
 
     line[0] = word
     return line
+
+
+def pipeline(actions, values):
+    for action in actions:
+        values = action(values)
+    return values
+
+
+def for_word(action):
+    def inner(lines):
+        return [action(line) for line in lines]
+    return inner
