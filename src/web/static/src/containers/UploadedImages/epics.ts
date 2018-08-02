@@ -48,7 +48,7 @@ const deleteImageEpic = (action$: ActionsObservable<AnyAction>) : Observable<Any
     return action$.pipe(
         ofType(getType(deleteImage)),
         flatMap(action => 
-            fetch(urls.imageId(action.payload.id))
+            fetch(urls.imageId(action.payload.id), {method: 'DELETE'})
                 .then(x => {
                     if(x.ok){
                         return deleteImageSuccess(action.payload)
