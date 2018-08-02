@@ -4,11 +4,13 @@ import { Card, CardHeader, CardText, RaisedButton, MenuItem } from "material-ui"
 import { CardActions, Grid, Typography, TextField, Select, Paper } from "@material-ui/core";
 import { ImageView } from "../../components/imageView/ImageView";
 import { connect } from "react-redux";
-import { nameChanged, deleteEntry, valueChanged, saveTest, tagChanged } from "./actions";
+import { nameChanged, deleteEntry, valueChanged, saveTest, tagChanged, addNewEntry } from "./actions";
 import { namespacedAction } from "redux-subspace";
 import PatchWarning from "../../components/patchWarning/PatchWarning";
 import ReferencetextInput from "../../components/ReferenceTextInput";
 import Delete from "@material-ui/icons/Delete";
+import Add from '@material-ui/icons/Add';
+import Clear from '@material-ui/icons/Clear';
 import { Translate } from "react-localize-redux";
 import './testEdit.scss'
 
@@ -18,10 +20,11 @@ interface ITestEditProps {
     tags: string[],
     title: string,
     save: () => void,
-    nameChanged: (name: string, newName: string) => void,
-    valueChanged: (name: string, value: string) => void
-    deleteEntry: (name: string) => void,
-    tagChanged: (tag: string) => void
+    nameChanged: (index: number, newName: string) => void,
+    valueChanged: (index: number, value: string) => void
+    deleteEntry: (index: number) => void,
+    tagChanged: (tag: string) => void,
+    addNewEntry: (name: string, value: string) => void
 }
 
 const mapStateToProps = (state: IBloodTest, props: any) => ({
@@ -31,16 +34,44 @@ const mapStateToProps = (state: IBloodTest, props: any) => ({
 
 const mapDispatchToProps = (dispatch: any, props: any) => ({
     save: () => dispatch(namespacedAction(props.namespace)(saveTest())),
-    nameChanged: (name: string, newName: string) => dispatch(namespacedAction(props.namespace)(nameChanged({name, newName}))),
-    valueChanged: (name: string, value: string) => dispatch(namespacedAction(props.namespace)(valueChanged({name, value}))),
-    deleteEntry: (name: string) => dispatch(namespacedAction(props.namespace)(deleteEntry({name}))),
-    tagChanged: (tag: string) => dispatch(namespacedAction(props.namespace)(tagChanged(tag)))
+    nameChanged: (index: number, newName: string) => dispatch(namespacedAction(props.namespace)(nameChanged({index, newName}))),
+    valueChanged: (index: number, value: string) => dispatch(namespacedAction(props.namespace)(valueChanged({index, value}))),
+    deleteEntry: (index: number) => dispatch(namespacedAction(props.namespace)(deleteEntry({index}))),
+    tagChanged: (tag: string) => dispatch(namespacedAction(props.namespace)(tagChanged(tag))),
+    addNewEntry: (name: string, value: string) => dispatch(namespacedAction(props.namespace)(addNewEntry({name, value}))),
 })
 
 class TestEdit extends React.Component<ITestEditProps> {
+    
+    state = {
+        name: '',
+        value: ''
+    }
+
     constructor(props: any) {
         super(props);        
     }
+
+    newNameChanged(name: string) {
+        this.setState({name});
+    }
+
+    newValueChanged(value: string) {
+        this.setState({value});
+    }
+    
+    addNewEntry(name: string, value: string): any {
+        if (!this.state.name || !this.state.value) {
+            return;
+        }
+
+        this.props.addNewEntry(name, value);
+        this.clearNewEntry();
+    }
+
+    clearNewEntry() {
+        this.setState({name: '', value: ''});
+    }    
 
     isSaveEnabled(): boolean {
         let enabled = true;
@@ -124,22 +155,45 @@ class TestEdit extends React.Component<ITestEditProps> {
                                                 name={name} 
                                                 value={name} 
                                                 references={this.props.references}
-                                                onChange={this.props.nameChanged}/>
+                                                onChange={(_: string, newName: string) => this.props.nameChanged(index, newName)}/>
                                             </Grid>
                                         <Grid item>
                                             <TextField
                                                 className="edit-input"
                                                 id={name + '_value'} 
                                                 value={value} 
-                                                onChange={(e: any) => this.props.valueChanged(name, e.target.value)}/>
+                                                onChange={(e: any) => this.props.valueChanged(index, e.target.value)}/>
                                         </Grid>
-                                        <Grid item onClick={() => this.props.deleteEntry(name)} className="actions-container">
-                                                    <Delete className="delete-icon"/>
-                                                
+                                        <Grid item onClick={() => this.props.deleteEntry(index)} className="actions-container">
+                                                    <Delete className="delete-icon"/>                                                
                                         </Grid>                                    
                                     </Grid>
                                 </Grid>)
                             })}
+                                <Grid item>
+                                    <Grid container spacing={8} alignItems="baseline" className="add-new-container">                                
+                                        <Grid item className="name-input">
+                                            <ReferencetextInput                                            
+                                                name={this.state.name} 
+                                                value={this.state.name} 
+                                                references={this.props.references}
+                                                onChange={(_: string, newName: string) => this.newNameChanged(newName)}/>
+                                            </Grid>
+                                        <Grid item>
+                                            <TextField
+                                                className="edit-input"
+                                                id={name + '_value'} 
+                                                value={this.state.value} 
+                                                onChange={(e: any) => this.newValueChanged(e.target.value)}/>
+                                        </Grid>
+                                        <Grid item className="actions-container">
+                                            <Add onClick={() => this.addNewEntry(this.state.name, this.state.value)} className="delete-icon"/> 
+                                            {
+                                                this.state.name && <Clear onClick={this.clearNewEntry.bind(this)} className="delete-icon"/>
+                                            }                                               
+                                        </Grid>                                    
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>                    

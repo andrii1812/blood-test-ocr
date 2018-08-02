@@ -124,7 +124,7 @@ def find_test():
     date = request.args.get('date')
     if not date:
         return abort(400)
-    return orm.find_test_id(date)
+    return jsonify(orm.find_test_id(date))
 
 
 @web.app.route('/tag')

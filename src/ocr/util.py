@@ -126,7 +126,7 @@ def replace_confident_values(line, references):
     word = line[0]
 
     for ref in references:
-        if 1 - Lev.distance(word, ref) / len(ref) > constants.CONFIDENCE:
+        if 1 - Lev.distance(word, ref) / len(ref) > constants.CONFIDENCE and word not in references:
             word = ref
             break
 
@@ -140,7 +140,13 @@ def pipeline(actions, values):
     return values
 
 
-def for_word(action):
+def for_line(action):
     def inner(lines):
         return [action(line) for line in lines]
     return inner
+
+
+def remove_empty_entries(lines):
+    for line in lines:
+        if line[0].strip():
+            yield line

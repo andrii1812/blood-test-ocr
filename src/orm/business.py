@@ -93,10 +93,11 @@ def save_image(filename, url, width, height):
 def find_test_id(date):
     date = parse_date(date)
     test = select(s for s in BloodTest if s.date == date).first()
-    if test:
-        return str(test.id)
-    else:
-        return ''
+
+    if not test:
+        raise ValueError('test with date {0} not found'.format(date))
+
+    return {'id': str(test.id), 'tag': test.tag.name}
 
 
 @orm.db_session
@@ -107,7 +108,7 @@ def get_all_tests():
         'date': format_date(x[1]),
         'tag': x[2].name,
         'numValues': x[3],
-	'numImages': x[4],
+        'numImages': x[4]
     } for x in query]
 
 

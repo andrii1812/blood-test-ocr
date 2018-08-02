@@ -31,12 +31,13 @@ def get_blood_test_values(lines, references):
         [
             util.clean_signature,
             util.to_list_of_strings,
-            util.for_word(util.remove_junk_words),
-            util.for_word(util.join_percent_or_hash),
-            util.for_word(util.join_all_except_last),
-            util.for_word(util.replace_long_dash),
-            util.for_word(lambda x: util.replace_confident_values(x, references)),
-            util.for_word(util.add_zero_values),
+            util.for_line(util.remove_junk_words),
+            util.for_line(util.join_percent_or_hash),
+            util.for_line(util.join_all_except_last),
+            util.for_line(util.replace_long_dash),
+            util.for_line(lambda x: util.replace_confident_values(x, references)),
+            util.remove_empty_entries,
+            util.for_line(util.add_zero_values),
         ],
         blood_values_lines
     )
