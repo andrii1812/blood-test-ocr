@@ -54,7 +54,11 @@ def check_tag(tag_name):
 
 @orm.db_session
 def save_test(date, values, image_id, tag):
+    if find_test_id(date):
+        raise ValueError('test with date {0} already exists'.format(date))
+
     date = parse_date(date)
+
     if tag:
         tag = check_tag(tag)
     else:
@@ -87,7 +91,7 @@ def save_image(filename, url, width, height):
 
 @orm.db_session
 def find_test_id(date):
-    date = datetime.strptime(date, '%d.%m.%Y')
+    date = parse_date(date)
     test = select(s for s in BloodTest if s.date == date).first()
     if test:
         return str(test.id)

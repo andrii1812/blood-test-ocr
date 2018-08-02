@@ -1,4 +1,5 @@
 import { ITestImage } from "./testImage";
+import urls from "./urls";
 
 export interface IBloodTest {
     id?: string,
@@ -14,3 +15,11 @@ export const initialBloodTest = () => ({
     images: [],
     values: []
 })
+
+export async function addPatchId(json: any) {
+    const id = await fetch(urls.findTestId(json.date))
+        .then(x => x.text());
+    if (id) {
+        json.patchId = id;
+    }
+}

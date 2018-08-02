@@ -5,7 +5,7 @@ import  * as addNew from "./actions";
 import urls from "../../model/urls";
 import { AnyAction } from "redux";
 import { flatMap } from "rxjs/operators";
-import { IAppState, getFileFromBlobUrl } from "../../model";
+import { IAppState, getFileFromBlobUrl, addPatchId } from "../../model";
 import { testLoaded, clearTest, loadTestFailed, loadTest, loadTestStarted } from "../TestEdit/actions";
 import { namespacedAction } from "redux-subspace";
 import { fromPromise } from "rxjs/observable/fromPromise";
@@ -59,12 +59,7 @@ async function ingestFile(state: IAppState, onError: () => void) {
         return;
     }
 
-    const id = await fetch(urls.findTestId(json.date))
-                                .then(x => x.text());    
-
-    if (id) {
-        json.patchId = id;
-    }
+    await addPatchId(json);
 
     return json
 }
