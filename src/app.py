@@ -19,7 +19,7 @@ def clean_uploads():
 
 @app.cli.command()
 def fix_references():
-    fix_reference_names([('Eosinofil%', 'Eozinofil%'), ('Basofil#', 'Bazofil#')])
+    fix_reference_names([('Eosınofıl%', 'Eozinofil%'), ('Basofıl#', 'Bazofil#')])
 
 
 if __name__ == '__main__':
