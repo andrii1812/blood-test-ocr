@@ -95,7 +95,7 @@ def find_test_id(date):
     test = select(s for s in BloodTest if s.date == date).first()
 
     if not test:
-        raise ValueError('test with date {0} not found'.format(date))
+        return
 
     return {'id': str(test.id), 'tag': test.tag.name}
 
