@@ -37,7 +37,7 @@ Ocr will produce:
 - [x] Update (PATCH) existing with new values
 - [x] Add tag for the test (on frontend)
 - [x] Ability to remove test entry
-- [ ] Ability to add new entry 
+- [x] Ability to add new entry 
 - [x] List of all tests
 - [x] Remove test
 - [x] Test edit/view

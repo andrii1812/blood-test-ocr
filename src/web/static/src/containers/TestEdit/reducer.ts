@@ -19,12 +19,12 @@ export default (state: ITestEditState = defaultState, action: EditValuesActions)
         case getType(editValues.testLoaded):
             return {...state, test: action.payload, state: TestEditLoading.LOAD_SUCCESS}
         case getType(editValues.nameChanged):
-            const {name, newName} = action.payload;
-            return nameChanged(state, name, newName)
+            const {index, newName} = action.payload;
+            return nameChanged(state, index, newName)
         case getType(editValues.valueChanged):
-            return valueChanged(state, action.payload.name, action.payload.value)
+            return valueChanged(state, action.payload.index, action.payload.value)
         case getType(editValues.deleteEntry):
-            return deleteEntry(state, action.payload.name)
+            return deleteEntry(state, action.payload.index)
         case getType(editValues.loadTest):
         case getType(editValues.clearTest):
             return {state: TestEditLoading.INITIAL, test: null};
@@ -33,18 +33,22 @@ export default (state: ITestEditState = defaultState, action: EditValuesActions)
                 throw new Error('edit on null data');
             }
             return {...state, test: {...state.test, tag: action.payload}}
+        case getType(editValues.addNewEntry):
+            if(!state.test) {
+                throw new Error('edit on null data');
+            }
+            const arr = [...state.test.values, [action.payload.name, action.payload.value]]
+            return {...state, test: {...state.test, values: arr}}
         default:
             return state  
     }
 }
 
-function nameChanged(state: ITestEditState, name: string, newName: string) {
+function nameChanged(state: ITestEditState, index: number, newName: string) {
     if(!state.test) {
         throw new Error('edit on null data');
     }
 
-    let index = state.test.values.findIndex(x => x[0] === name);
-    
     const newArray = state.test.values.map((x, i) => {
         if(index != i) {
             return x;
@@ -56,30 +60,27 @@ function nameChanged(state: ITestEditState, name: string, newName: string) {
     return {...state, test: {...state.test, values: newArray}};
 }
 
-function valueChanged(state: ITestEditState, name: string, value:string) {
+function valueChanged(state: ITestEditState, index: number, value:string) {
     if(!state.test) {
         throw new Error('edit on null data');
     }
 
-    let index = state.test.values.findIndex(x => x[0] === name);
-    
     const newArray = state.test.values.map((x, i) => {
         if(index != i) {
             return x;
         }
 
-        return [name, value]
+        return [x[0], value]
     })
 
     return {...state, test: {...state.test, values: newArray}};
 }
 
-function deleteEntry(state: ITestEditState, name: string) {
+function deleteEntry(state: ITestEditState, index: number) {
     if(!state.test) {
         throw new Error('edit on null data');
     }
 
-    let index = state.test.values.findIndex(x => x[0] === name);
     const newArray = state.test.values;
     newArray.splice(index, 1);
     return {...state, test: {...state.test, values: newArray}};

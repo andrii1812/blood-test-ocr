@@ -1,7 +1,7 @@
 import os
 
 import config
-from orm import TestImage, orm, business
+from orm import TestImage, orm, business, ReferenceName
 
 
 @orm.db_session
@@ -13,6 +13,21 @@ def clean_up_unused_images():
         image.delete()
         print('removing {0}'.format(path))
         os.remove(path)
+
+
+@orm.db_session
+def fix_reference_names(names):
+    for find, replace in names:
+        f = ReferenceName.get(name=find)
+
+        if not f:
+            print('"{0}" not found. Ignoring'.format(find))
+            continue
+
+        rep = ReferenceName(name=replace)
+        for test in f.blood_test_entries:
+            test.name = rep
+        f.delete()
 
 
 if __name__ == '__main__':

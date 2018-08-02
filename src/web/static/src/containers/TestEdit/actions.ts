@@ -8,22 +8,28 @@ export const testLoaded = createStandardAction('TEST_LOADED')<IBloodTest>();
 export const clearTest = createStandardAction('CLEAR_TEST')();
 
 export interface INameChangedPayload {
-    name: string,
+    index: number,
     newName: string
 }
 export const nameChanged = createStandardAction('NAME_CHANGED')<INameChangedPayload>();
 
 export interface IValueChangedPayload {
-    name: string,
+    index: number,
     value: string
 }
 export const valueChanged = createStandardAction('VALUE_CHANGED')<IValueChangedPayload>();
 
 export interface IDeletePayload {
-    name: string
+    index: number
 }
 export const deleteEntry = createStandardAction('DELETE_ENTRY')<IDeletePayload>();
 
 export const saveTest = createStandardAction('SAVE_TEST')();
 
 export const tagChanged = createStandardAction('TAG_CHANGED')<string>();
+
+export interface IAddEntryPayload {
+    name: string,
+    value: string
+}
+export const addNewEntry = createStandardAction('ADD_NEW_ENTRY')<IAddEntryPayload>();

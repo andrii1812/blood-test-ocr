@@ -1,5 +1,7 @@
+import os
+
 import web
-from orm.cleanup import clean_up_unused_images
+from orm.cleanup import clean_up_unused_images, fix_reference_names
 from orm.setup import seed_db
 
 app = web.app
@@ -15,7 +17,13 @@ def clean_uploads():
     clean_up_unused_images()
 
 
+@app.cli.command()
+def fix_references():
+    fix_reference_names([('Eosinofil%', 'Eozinofil%'), ('Basofil#', 'Bazofil#')])
+
+
 if __name__ == '__main__':
-    web.ocr.test()
-    #app.run(host=os.getenv('HOST'), port=os.getenv('PORT'), debug=True)
+    #web.ocr.test()
+    #fix_reference_names([('PCT!', 'PCT')])
+    app.run(host=os.getenv('HOST'), port=os.getenv('PORT'), debug=True)
     pass
