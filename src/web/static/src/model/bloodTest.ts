@@ -18,10 +18,13 @@ export const initialBloodTest = () => ({
 
 export async function addPatchId(json: any) {
     const res = await fetch(urls.findTestId(json.date))
-        .then(x => x.json());
 
-    if (res) {
-        json.patchId = res.id;
-        json.tag = res.tag;
+    if (!res.ok) {
+        return;
     }
+
+    const resJson = await res.json();
+
+    json.patchId = resJson.id;
+    json.tag = resJson.tag;
 }
