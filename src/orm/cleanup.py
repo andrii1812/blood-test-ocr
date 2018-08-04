@@ -2,6 +2,9 @@ import os
 
 import itertools
 
+from PIL import Image
+
+import config
 from orm import TestImage, orm, ReferenceName, get_base_path
 
 
@@ -36,6 +39,24 @@ def fix_reference_names(names):
         f.delete()
 
 
+def resize_uploads():
+    base_path = get_base_path()
+    for file in os.listdir(base_path):
+        path = os.path.join(base_path, file)
+        size = os.path.getsize(path) / 1024 / 1024
+
+        print('resizing: {0}...'.format(path), end='')
+
+        if size < config.IMAGE_RESIZE_TRESHOLD:
+            print('skipping')
+            continue
+
+        image = Image.open(path)
+        size = image.size
+        image.thumbnail((size[0] * config.IMAGE_RESIZE_RATIO, size[1] * config.IMAGE_RESIZE_RATIO), Image.ANTIALIAS)
+        image.save(path)
+        print('done')
+
 if __name__ == '__main__':
-    clean_up_unused_images()
+    resize_images()
 

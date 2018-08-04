@@ -1,7 +1,7 @@
 import os
 
 import web
-from orm.cleanup import clean_up_unused_images, fix_reference_names
+from orm.cleanup import clean_up_unused_images, fix_reference_names, resize_uploads
 from orm.setup import seed_db
 
 app = web.app
@@ -15,6 +15,11 @@ def setup_db():
 @app.cli.command()
 def clean_uploads():
     clean_up_unused_images()
+
+
+@app.cli.command()
+def resize_images():
+    resize_uploads()
 
 
 @app.cli.command()
