@@ -5,11 +5,20 @@ export interface ITestImage {
     height?: number
 }
 
-export function getScaledHeight(image: ITestImage, width: number) {
+function getAspect(image: ITestImage) {
     if(!image.width || ! image.height) {
         throw new Error('image widthout dimentions');
     }
 
-    const aspect = image.width / image.height;
-    return width / aspect
+    return image.width / image.height;
+}
+
+export function getScaledHeight(image: ITestImage, width: number) {
+    const aspect = getAspect(image);
+    return width / aspect;
+}
+
+export function getScaledWidth(image: ITestImage, height: number) {
+    const aspect = getAspect(image);
+    return height * aspect;
 }

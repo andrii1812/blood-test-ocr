@@ -1,4 +1,35 @@
 .modal-body {
     margin: 0 auto;
     width: 600px;
+    position: relative;
+
+    & .close-button {
+        position: absolute;
+        right: 0;
+        top: 0;
+        cursor: pointer;
+
+        & .close-icon {
+            font-size: 40px;
+        }
+    }
+}
+
+.image-view-container {
+    position: relative;
+
+    .open-new-tab-icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+        color: white;
+        cursor: pointer;
+        display: none;
+    }
+}
+
+.image-view-container:hover {
+    .open-new-tab-icon {
+        display: block;
+    }
 }
