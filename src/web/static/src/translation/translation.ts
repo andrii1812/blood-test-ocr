@@ -31,5 +31,13 @@ export default {
         title: [null, 'Завантажені зображення'],
         noImages: [null, 'Не завантажено жодного зображення']
     },
-    parseFailed: [null, 'Розпізнавання невдале']
+    parseFailed: [null, 'Розпізнавання невдале'],
+    statistics: {
+        title: [null, 'Статистика'],
+        dateRange: [null, 'Період'],
+        to: [null, 'до'],
+        tag: [null, 'Тег'],
+        addLine: [null, 'Додати лінію'],
+        generate: ['Generate', 'Згенерувати']
+    }
 }

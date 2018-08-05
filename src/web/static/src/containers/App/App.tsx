@@ -15,6 +15,7 @@ import TopBar from "../../components/TopBar";
 import {renderToStaticMarkup} from 'react-dom/server';
 import UploadedImages from "../UploadedImages/UploadedImages";
 import ParseExisting from "../ParseExisting/ParseExisting";
+import Statistics from "../Statistics/Statistics";
 
 interface IAppProps extends LocalizeContextProps {
     data: IAppValuesState,
@@ -100,7 +101,10 @@ class App extends React.Component<IAppProps> {
                                 component={LoadTest}/>
                             <Route
                                 path='/test'
-                                component={TestList}/>                            
+                                component={TestList}/> 
+                            <Route
+                                path='/stat'
+                                component={Statistics}/>
                         </Switch>
                     </Grid>                
                 </Grid>

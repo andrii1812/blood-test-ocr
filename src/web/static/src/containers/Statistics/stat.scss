@@ -1,0 +1,43 @@
+.to-label {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+
+.date-container {
+    & .datepicker {
+        width: 187px;
+    }
+}
+
+.tag-select {
+    width: 187px;
+}
+
+.tag-label-container {
+    width: 60px;
+}
+
+.add-icon {
+    align-self: flex-end;
+}
+
+.line-container {
+    position: relative;
+
+    & .delete-line-icon {
+        position: absolute;
+        right: 16px;
+        top: 25%;
+        @media (min-width: 600px) {
+            display: none;
+        }
+        
+    }
+}
+
+.line-container:hover {
+    & .delete-line-icon {
+        display: block;
+    }
+}
