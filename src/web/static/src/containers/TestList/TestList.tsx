@@ -10,6 +10,7 @@ import { IAppState } from "../../model";
 import { push } from "connected-react-router";
 import './testList.scss'
 import { Translate } from "react-localize-redux";
+import { parseDate } from "../../model/util";
 
 interface ITestListProps {
     list: ITestListEntry[],
@@ -75,6 +76,9 @@ class TestList extends React.Component<ITestListProps> {
             )
         }
 
+        const list = [...this.props.list];
+        list.sort((x, y) => parseDate(x.date).getTime() - parseDate(y.date).getTime());
+
         return (
             <Paper>
                 <Table>
@@ -88,7 +92,7 @@ class TestList extends React.Component<ITestListProps> {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {this.props.list.map(this.TestListEntry)}
+                        {list.map(this.TestListEntry)}
                     </TableBody>
                 </Table>
             </Paper>

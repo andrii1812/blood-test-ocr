@@ -1,6 +1,6 @@
 import React = require("react");
 import { MenuItem } from "material-ui";
-import { FormControl, FormHelperText, Select } from "@material-ui/core";
+import { FormControl, FormHelperText, Select, TextField } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
 
 interface IReferencetextInputProps {
@@ -10,12 +10,10 @@ interface IReferencetextInputProps {
     onChange: (name: string, newName: string) => void
 }
 
-export default class ReferencetextInput extends React.Component<IReferencetextInputProps, {}> {
+export default class ReferencetextInput extends React.Component<IReferencetextInputProps> {
+
     constructor(props: any) {
         super(props);
-        this.state = {
-            value: ''
-        }
     }
 
     isValid() {
@@ -27,18 +25,22 @@ export default class ReferencetextInput extends React.Component<IReferencetextIn
     }
 
     render() {
+        let references = this.props.references;
+
         return (
             <FormControl error={!this.isValid()}>
                 <Select 
-                    value={this.props.value} onChange={this.onChange.bind(this)} className="edit-input">
+                    value={this.props.value} 
+                    onChange={this.onChange.bind(this)} 
+                    className="edit-input">                                    
                     {
-                        this.props.references.map((x, i) => {
+                        references.map((x, i) => {
                             return <MenuItem key={i} value={x}>{x}</MenuItem>
                         })
                     }
                     {
                         !this.isValid() &&
-                            <MenuItem value={this.props.value}>{this.props.value}</MenuItem>                        
+                            <MenuItem style={{display: 'none'}} value={this.props.value}>{this.props.value}</MenuItem>                        
                     }
                 </Select>
                 {!this.isValid() && <FormHelperText><Translate id="invalidValue">Invalid value</Translate></FormHelperText>}
