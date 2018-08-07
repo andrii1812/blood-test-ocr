@@ -14,7 +14,15 @@ def get_lines_bounding_boxes(tool, image):
 
 
 def get_date(lines):
-    _, line = util.find_line_with_text(constants.DATE_LINE_START, lines)
+    line = None
+    for start in constants.DATE_LINES:
+        if line:
+            break
+        _, line = util.find_line_with_text(start, lines)
+
+    if not line:
+        raise ValueError('date line not found')
+
     date = util.get_date(line.word_boxes)
     return date.content
 

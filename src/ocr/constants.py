@@ -6,6 +6,6 @@ JUNK_WORDS = ['L', 'H', u'Miliyon/μL', 'g/dL', 'Bin/μL', 'mEq/L']
 JUNK_WORD_THRESHOLD = 2
 MARGIN = 10
 LONG_DASH = '-'
-DATE_LINE_START = 'Onay'
+DATE_LINES = ['Onay', 'Sonuç', 'Örnek']
 BLOOD_TEST_START = ['TESTLER', 'SONUÇ', 'BIRIM', 'REFERANS', 'ARALIĞI']
 CONFIDENCE = 0.75
