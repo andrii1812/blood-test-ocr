@@ -1,0 +1,15 @@
+.top-bar {
+    margin-bottom: 8px;
+    
+    & .lang-select {
+        justify-self: flex-end;
+    }
+
+    & .app-title {
+        margin: 8px 16px;
+    }
+
+    & .drawer .nav-list-container {
+        max-width: 100%;
+    }
+}

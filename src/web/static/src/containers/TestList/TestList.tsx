@@ -80,7 +80,7 @@ class TestList extends React.Component<ITestListProps> {
         list.sort((x, y) => parseDate(x.date).getTime() - parseDate(y.date).getTime());
 
         return (
-            <Paper>
+            <Paper className="test-list-container">
                 <Table>
                     <TableHead>
                         <TableRow>

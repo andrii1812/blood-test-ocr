@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemIcon, ListItemText, Typography } from "@material-ui/core";
+import { List, ListItem, ListItemIcon, ListItemText, Typography, Hidden, withTheme, WithTheme } from "@material-ui/core";
 import React = require("react");
 import Add from '@material-ui/icons/Add';
 import ListIcon from "@material-ui/icons/List"
@@ -7,8 +7,10 @@ import Collections from "@material-ui/icons/Collections"
 import { Translate } from "react-localize-redux";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { StaticContext } from "react-router";
+import './navList.scss'
+import LanguageSelect from "../LanguageSelect";
 
-class NavList extends React.Component<RouteComponentProps<{}, StaticContext>> {
+class NavList extends React.Component<RouteComponentProps<{}, StaticContext> & WithTheme> {
     state = {
         items: [
             {href: '#/', icon: Collections, trKey: 'navlist.images'},
@@ -23,18 +25,21 @@ class NavList extends React.Component<RouteComponentProps<{}, StaticContext>> {
         let style = {};
         if (item.href === current) {
             style = {
-                backgroundColor: 'rgba(0, 151, 167, 0.06)'
+                backgroundColor: this.props.theme.palette.primary.main
             }
         }
+        console.log(this.props.theme.palette)
 
         return (
             <ListItem button component="a" href={item.href} key={index} style={style}>
-                <ListItemIcon>
-                    <item.icon/>
+                <ListItemIcon className="link-icon">
+                    <item.icon />
                 </ListItemIcon>                                                                       
                 <ListItemText>                                        
-                    <Typography noWrap variant="subheading" style={{width: 200}}>
-                        <Translate id={item.trKey}/>
+                    <Typography noWrap variant="subheading" className="link-text-container">
+                        <div className="link-text">
+                            <Translate id={item.trKey}/>
+                        </div>
                     </Typography>                                        
                 </ListItemText>                                    
             </ListItem>
@@ -43,11 +48,15 @@ class NavList extends React.Component<RouteComponentProps<{}, StaticContext>> {
 
     render() {
         return (
-            <List component="nav">
-                {this.state.items.map(this.mapItem.bind(this))}        
-            </List>
+            <div className="nav-list-container-outer">
+                <div className="nav-list-container">                    
+                    <List component="nav" className="nav-list">   
+                        {this.state.items.map(this.mapItem.bind(this))}        
+                    </List>
+                </div>
+            </div>
         )
     }
 }
 
-export default withRouter(NavList)
+export default withTheme()(withRouter(NavList))

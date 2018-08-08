@@ -1,0 +1,34 @@
+.nav-list {
+    color: white;
+}
+
+.nav-list-container {
+    height: 100%;
+    background-color: rgb(51, 51, 51);    
+    position: fixed;    
+    max-width: 16.6667%;
+    z-index: 999;
+}
+
+.nav-list-placeholder {
+    width: 100%;
+}
+
+.link-text { 
+    width: 150px;    
+    color: white;
+}
+
+.link-text-container {
+    flex-flow: 1;
+}
+
+.link-icon g {
+    color: white;
+}
+
+.nav-list-container-outer {
+    position: relative;
+    width: 100%;
+}
+

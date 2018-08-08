@@ -41,7 +41,6 @@ render(
             <ConnectedRouter history={history}>
                 <MuiThemeProvider muiTheme={getTheme()}>
                     <div>
-                        <CssBaseline/>
                         <App/>
                     </div>                
                 </MuiThemeProvider>

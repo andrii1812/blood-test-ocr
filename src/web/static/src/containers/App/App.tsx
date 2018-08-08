@@ -8,14 +8,14 @@ import LoadSingleTest from "../LoadSingleTest/LoadSingleTest";
 import { withRouter } from "react-router";
 import { Switch, Route } from "react-router-dom";
 import TestList from "../TestList/TestList";
-import NavList from "../../components/NavList";
+import NavList from "../../components/NavList/NavList";
 import { withLocalize, LocalizeContextProps } from "react-localize-redux";
 import translations from '../../translation/translation';
-import TopBar from "../../components/TopBar";
 import {renderToStaticMarkup} from 'react-dom/server';
 import UploadedImages from "../UploadedImages/UploadedImages";
 import ParseExisting from "../ParseExisting/ParseExisting";
 import Statistics from "../Statistics/Statistics";
+import TopBar from "../../components/TopBar/TopBar";
 
 interface IAppProps extends LocalizeContextProps {
     data: IAppValuesState,
@@ -76,15 +76,15 @@ class App extends React.Component<IAppProps> {
         }
 
         return (
-            <div>
-                <TopBar/>
-                <Grid container style={{paddingTop: 8}}>
+            <div style={{height: '100%'}}>                                       
+                <Grid container>
                     <Hidden smDown>
                         <Grid item md={2}>
                             <NavList/>
                         </Grid>
                     </Hidden>
-                    <Grid item sm={12} md={10} xs={12}>
+                    <Grid item sm={12} md={10} xs={12} style={{paddingLeft: 8}}>
+                        <TopBar/>
                         <Switch>
                             <Route 
                                 path="/"
