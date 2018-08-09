@@ -7,10 +7,9 @@ import Collections from "@material-ui/icons/Collections"
 import { Translate } from "react-localize-redux";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { StaticContext } from "react-router";
-import './navList.scss'
-import LanguageSelect from "../LanguageSelect";
+import './navList.scss';
 
-class NavList extends React.Component<RouteComponentProps<{}, StaticContext> & WithTheme> {
+class NavList extends React.Component<RouteComponentProps<any, StaticContext> & WithTheme> {
     state = {
         items: [
             {href: '#/', icon: Collections, trKey: 'navlist.images'},
@@ -59,4 +58,4 @@ class NavList extends React.Component<RouteComponentProps<{}, StaticContext> & W
     }
 }
 
-export default withTheme()(withRouter(NavList))
+export default withRouter(withTheme()(NavList))
