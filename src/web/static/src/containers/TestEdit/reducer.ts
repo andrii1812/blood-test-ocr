@@ -1,23 +1,23 @@
 import * as editValues from "./actions";
 import { getType, ActionType } from "typesafe-actions";
-import { IBloodTest, ITestEditState, TestEditLoading } from "../../model";
+import { IBloodTest, ILoading, ILoadingState } from "../../model";
 
 export type EditValuesActions = ActionType< typeof editValues>
 
 const defaultState = {
-    state: TestEditLoading.INITIAL,
-    test: null
+    state: ILoadingState.INITIAL,
+    value: null
 }
 
-export default (state: ITestEditState = defaultState, action: EditValuesActions): ITestEditState => {
+export default (state: ILoading<IBloodTest> = defaultState, action: EditValuesActions): ILoading<IBloodTest> => {
     switch(action.type) {
         case getType(editValues.loadTest):
         case getType(editValues.loadTestStarted):
-            return {...state, state: TestEditLoading.LOADING}
+            return {...state, state: ILoadingState.LOADING}
         case getType(editValues.loadTestFailed):
-            return {...state, state: TestEditLoading.LOAD_FAILURE}
+            return {...state, state: ILoadingState.LOAD_FAILURE}
         case getType(editValues.testLoaded):
-            return {...state, test: action.payload, state: TestEditLoading.LOAD_SUCCESS}
+            return {...state, value: action.payload, state: ILoadingState.LOAD_SUCCESS}
         case getType(editValues.nameChanged):
             const {index, newName} = action.payload;
             return nameChanged(state, index, newName)
@@ -27,29 +27,29 @@ export default (state: ITestEditState = defaultState, action: EditValuesActions)
             return deleteEntry(state, action.payload.index)
         case getType(editValues.loadTest):
         case getType(editValues.clearTest):
-            return {state: TestEditLoading.INITIAL, test: null};
+            return {state: ILoadingState.INITIAL, value: null};
         case getType(editValues.tagChanged):
-            if(!state.test) {
+            if(!state.value) {
                 throw new Error('edit on null data');
             }
-            return {...state, test: {...state.test, tag: action.payload}}
+            return {...state, value: {...state.value, tag: action.payload}}
         case getType(editValues.addNewEntry):
-            if(!state.test) {
+            if(!state.value) {
                 throw new Error('edit on null data');
             }
-            const arr = [...state.test.values, [action.payload.name, action.payload.value]]
-            return {...state, test: {...state.test, values: arr}}
+            const arr = [...state.value.values, [action.payload.name, action.payload.value]]
+            return {...state, value: {...state.value, values: arr}}
         default:
             return state  
     }
 }
 
-function nameChanged(state: ITestEditState, index: number, newName: string) {
-    if(!state.test) {
+function nameChanged(state: ILoading<IBloodTest>, index: number, newName: string) {
+    if(!state.value) {
         throw new Error('edit on null data');
     }
 
-    const newArray = state.test.values.map((x, i) => {
+    const newArray = state.value.values.map((x, i) => {
         if(index != i) {
             return x;
         }
@@ -57,15 +57,15 @@ function nameChanged(state: ITestEditState, index: number, newName: string) {
         return [newName, x[1]]
     })
 
-    return {...state, test: {...state.test, values: newArray}};
+    return {...state, test: {...state.value, values: newArray}};
 }
 
-function valueChanged(state: ITestEditState, index: number, value:string) {
-    if(!state.test) {
+function valueChanged(state: ILoading<IBloodTest>, index: number, value:string) {
+    if(!state.value) {
         throw new Error('edit on null data');
     }
 
-    const newArray = state.test.values.map((x, i) => {
+    const newArray = state.value.values.map((x, i) => {
         if(index != i) {
             return x;
         }
@@ -73,15 +73,15 @@ function valueChanged(state: ITestEditState, index: number, value:string) {
         return [x[0], value]
     })
 
-    return {...state, test: {...state.test, values: newArray}};
+    return {...state, test: {...state.value, values: newArray}};
 }
 
-function deleteEntry(state: ITestEditState, index: number) {
-    if(!state.test) {
+function deleteEntry(state: ILoading<IBloodTest>, index: number) {
+    if(!state.value) {
         throw new Error('edit on null data');
     }
 
-    const newArray = state.test.values;
+    const newArray = state.value.values;
     newArray.splice(index, 1);
-    return {...state, test: {...state.test, values: newArray}};
+    return {...state, test: {...state.value, values: newArray}};
 }

@@ -3,11 +3,11 @@ import { appValuesEpic } from './containers/App/epics';
 import { addNewEpic } from './containers/AddNew/epics';
 import { subspaced } from 'redux-subspace-observable';
 import { loadSingleTestEpic } from './containers/LoadSingleTest/epics';
-import { IAppState } from './model';
 import { testEditEpic } from './containers/TestEdit/epics';
 import { testListEpic } from './containers/TestList/epics';
 import uploadedImagesEpic from './containers/UploadedImages/epics';
 import { parseExistingEpic } from './containers/ParseExisting/epics';
+import { generateGraphEpic } from './containers/Statistics/epics';
 
 export default combineEpics(
     appValuesEpic,
@@ -20,5 +20,6 @@ export default combineEpics(
     subspaced((state:any) => state.parseExisting, 'parseExisting')(combineEpics(
         parseExistingEpic,
         testEditEpic
-    )),   
+    )),
+    generateGraphEpic
 )

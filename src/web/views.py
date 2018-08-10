@@ -136,3 +136,13 @@ def find_test():
 @web.app.route('/tag')
 def get_tags():
     return jsonify(orm.get_tags())
+
+
+@web.app.route('/stat', methods=['POST'])
+def get_statistics():
+    data = request.json
+    from_ = data.get('from')
+    to = data.get('to')
+    tag = data.get('tag')
+    lines = list(map(lambda x: x['name'], data['lines']))
+    return jsonify(orm.generate_statistics(from_, to, tag, lines))

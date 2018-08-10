@@ -27,7 +27,6 @@ class NavList extends React.Component<RouteComponentProps<any, StaticContext> & 
                 backgroundColor: this.props.theme.palette.primary.main
             }
         }
-        console.log(this.props.theme.palette)
 
         return (
             <ListItem button component="a" href={item.href} key={index} style={style}>

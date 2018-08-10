@@ -6,6 +6,7 @@ import { namespaced } from 'redux-subspace';
 import addNewReducer from './containers/AddNew/reducer';
 import testListReducer from './containers/TestList/reducer';
 import uploadedImagesReducer from './containers/UploadedImages/reducer';
+import statisticsReducer from './containers/Statistics/reducer';
 
 export default combineReducers({
     router: routerReducer,
@@ -18,4 +19,5 @@ export default combineReducers({
     testList: namespaced('testList')(testListReducer),
     uploadedImages: uploadedImagesReducer,
     parseExisting: namespaced('parseExisting')(testEditReducer),
+    statistics: statisticsReducer,
 });

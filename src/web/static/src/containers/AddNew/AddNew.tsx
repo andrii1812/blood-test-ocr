@@ -1,5 +1,5 @@
 import * as React from "react";
-import {IBloodTest, IAppState, IUploadFile, TestEditLoading } from '../../model'
+import {IBloodTest, IAppState, IUploadFile, ILoadingState } from '../../model'
 import FileSelect from "../../components/FileSelect";
 import TestEdit from "../TestEdit/TestEdit";
 import { Grid, CircularProgress } from "@material-ui/core";
@@ -15,14 +15,14 @@ interface IAddNewProps {
     references: string[],
     tags: string[],
     ingestResults: IBloodTest | null,
-    loadState: TestEditLoading
+    loadState: ILoadingState
     ingestFile: () => void,
     fileSelected: (file: IUploadFile) => void,
     clearTest: () => void
 }
 
 const mapStateToProps = (state: IAppState) => ({
-    ingestResults: state.addNew.editValues.test,
+    ingestResults: state.addNew.editValues.value,
     loadState: state.addNew.editValues.state,
     references: state.app.references,
     tags: state.app.tags,
@@ -50,14 +50,14 @@ class AddNew extends React.Component<IAddNewProps> {
                     <FileSelect fileSelected={this.props.fileSelected} submit={this.props.ingestFile}/>
                 </Grid>
                 {
-                    this.props.loadState === TestEditLoading.LOAD_FAILURE && <ParseFailed/>
+                    this.props.loadState === ILoadingState.LOAD_FAILURE && <ParseFailed/>
                 }
                 {
-                    this.props.loadState === TestEditLoading.LOADING && <CircularProgress style={{margin: '0 auto'}}/>
+                    this.props.loadState === ILoadingState.LOADING && <CircularProgress style={{margin: '0 auto'}}/>
                 }
-                {this.props.loadState === TestEditLoading.LOAD_SUCCESS && 
+                {this.props.loadState === ILoadingState.LOAD_SUCCESS && 
                     (<Grid item>
-                        <SubspaceProvider mapState={(s: IAppState) => s.addNew.editValues.test} namespace="editValues">
+                        <SubspaceProvider mapState={(s: IAppState) => s.addNew.editValues.value} namespace="editValues">
                             <Translate>
                                 {({translate}) => <TestEdit 
                                                         title={translate('parsedResults')} 

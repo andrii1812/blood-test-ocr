@@ -1,7 +1,7 @@
 import * as React from "react";
 import { SubspaceProvider } from "react-redux-subspace";
 import {TestEdit} from "../TestEdit";
-import { IAppState, IBloodTest, TestEditLoading } from "../../model";
+import { IAppState, IBloodTest, ILoadingState } from "../../model";
 import { connect } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Grid } from "@material-ui/core";
@@ -15,14 +15,14 @@ interface ILoadSingleTestProps {
     tags: string[],
     id: string,
     test: IBloodTest | null,
-    loadState: TestEditLoading
+    loadState: ILoadingState
     loadTest: (id: string) => void
 }
 
 const mapStateToProps = (state: IAppState, props: any) => ({
     references: state.app.references,
     tags: state.app.tags,
-    test: state.singleTest.test,
+    test: state.singleTest.value,
     loadState: state.singleTest.state,
     ...props
 })
@@ -43,7 +43,7 @@ class LoadSingleTest extends React.Component<ILoadSingleTestProps> {
     }
     
     render() {
-        if (this.props.loadState === TestEditLoading.LOADING || this.props.loadState === TestEditLoading.INITIAL) {
+        if (this.props.loadState === ILoadingState.LOADING || this.props.loadState === ILoadingState.INITIAL) {
             return (
                 <Grid container justify="center">
                     <Grid item>
@@ -54,12 +54,12 @@ class LoadSingleTest extends React.Component<ILoadSingleTestProps> {
         }
 
 
-        if (this.props.loadState === TestEditLoading.LOAD_FAILURE) {
+        if (this.props.loadState === ILoadingState.LOAD_FAILURE) {
             return <ParseFailed/>
         }
 
         return (
-            <SubspaceProvider mapState={(s: IAppState) => s.singleTest.test} namespace="singleTest">
+            <SubspaceProvider mapState={(s: IAppState) => s.singleTest.value} namespace="singleTest">
                 <Translate>
                     {({translate}) => <TestEdit 
                                             title={translate('singleTest')} 

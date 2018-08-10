@@ -3,26 +3,28 @@ import { RouterState } from "react-router-redux";
 import { IBloodTest } from "./bloodTest";
 import { ITestList } from "./testList";
 import { ITestImage } from "./testImage";
+import { IGraphRequest, IGraphResponse } from "./statistics";
 
 export * from "./bloodTest"
 export * from "./testImage"
 export * from "./ingestFile"
+export * from "./statistics"
 
-export enum TestEditLoading {
+export enum ILoadingState {
     INITIAL,
     LOADING,
     LOAD_SUCCESS,
     LOAD_FAILURE
 }
 
-export interface ITestEditState {
-    test: IBloodTest | null,
-    state: TestEditLoading
+export interface ILoading<T> {
+    value: T | null,
+    state: ILoadingState
 }
 
 export interface IAddNewState {
     ingestFile: IIngestFileState,
-    editValues: ITestEditState
+    editValues: ILoading<IBloodTest>
 }
 
 export interface IAppValuesState {
@@ -40,9 +42,10 @@ export interface IAppState {
     router: RouterState,
     app: IAppValuesState,
     addNew: IAddNewState,
-    singleTest: ITestEditState,
+    singleTest: ILoading<IBloodTest>,
     testList: ITestList,
     uploadedImages: IUploadedImagesState,
-    parseExisting: ITestEditState,
+    parseExisting: ILoading<IBloodTest>,
+    statistics: ILoading<IGraphResponse>
 }
 

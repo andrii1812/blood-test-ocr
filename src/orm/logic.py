@@ -1,3 +1,7 @@
+import logging
+from operator import itemgetter
+
+import itertools
 from pony import orm
 from orm.entities import *
 
@@ -197,3 +201,69 @@ def delete_image(image_id):
         raise ValueError('cannot delete image that used in tests')
 
     image.delete()
+
+
+@orm.db_session
+def min_date():
+    return min(x.date for x in BloodTest.select())
+
+
+@orm.db_session
+def max_date():
+    return max(x.date for x in BloodTest.select())
+
+
+def array_where_clause(name, array):
+    dic = dict(('p' + str(i), val) for i, val in enumerate(array))
+    format_ = '{0} = {1} '
+    terms = map(lambda x: format_.format(name, '$' + x[0]), dic.items())
+    return "OR ".join(terms), dic
+
+
+@orm.db_session
+def generate_statistics(from_, to, tag, lines):
+    orm.sql_debug(True)
+    from_ = parse_date(from_) if from_ else min_date()
+    to = parse_date(to) if to else max_date()
+
+    lines_clause, lines_params = array_where_clause("be.name", lines)
+
+    if tag:
+        where_clause = "tag = $tag"
+    else:
+        where_clause = "date <= datetime($to, '+1 second') AND date >= $f"
+    sql = "SELECT bt.date, bt.tag, be.value, be.name FROM " + \
+          "BloodTestEntry as be JOIN BloodTest_BloodTestEntry as bte " + \
+          "on be.id = bte.bloodtestentry " + \
+          "JOIN BloodTest bt on bt.id = bte.bloodtest " + \
+          "WHERE (" + lines_clause + ") AND bt.id in " + \
+          "(SELECT id from BloodTest WHERE " + where_clause + ")" + \
+          "ORDER BY bt.date ASC "
+
+    sel = db.select(sql, globals={'f': from_, 'to': to, 'tag': tag, **lines_params})
+    sel = list(map(lambda x: (datetime.strptime(x[0], '%Y-%m-%d %X.%f'), x[1], x[2], x[3]), sel))
+
+    sorted_dates = sorted(set(map(itemgetter(0), sel)))
+    x = list(map(format_date, sorted_dates))
+    y = []
+
+    for ref_name in lines:
+        values = list(map(lambda x: x[2], filter(lambda x: x[3] == ref_name, sel)))
+        data = {'name': ref_name, 'data': values}
+        y.append(data)
+
+    fill_rect = []
+    default_tag = get_default_tag().name
+    for k, g in itertools.groupby(sel, lambda x: x[1]):
+        if k == default_tag:
+            continue
+        g = list(g)
+        from_ = min(map(lambda x: x[0], g))
+        to = max(map(lambda x: x[0], g))
+        fill_rect.append({'from': format_date(from_), 'to': format_date(to)})
+
+    return {
+        'x': x,
+        'y': y,
+        'fill': fill_rect
+    }
