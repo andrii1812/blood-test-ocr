@@ -9,7 +9,7 @@ const defaultState = {
     value: null
 }
 
-export default (state: ILoading<IBloodTest> = defaultState, action: EditValuesActions): ILoading<IBloodTest> => {
+export default (state: ILoading<IBloodTest> = defaultState, action: EditValuesActions): ILoading<IBloodTest> => {    
     switch(action.type) {
         case getType(editValues.loadTest):
         case getType(editValues.loadTestStarted):
@@ -57,7 +57,7 @@ function nameChanged(state: ILoading<IBloodTest>, index: number, newName: string
         return [newName, x[1]]
     })
 
-    return {...state, test: {...state.value, values: newArray}};
+    return {...state, value: {...state.value, values: newArray}};
 }
 
 function valueChanged(state: ILoading<IBloodTest>, index: number, value:string) {
@@ -73,7 +73,7 @@ function valueChanged(state: ILoading<IBloodTest>, index: number, value:string) 
         return [x[0], value]
     })
 
-    return {...state, test: {...state.value, values: newArray}};
+    return {...state, value: {...state.value, values: newArray}};
 }
 
 function deleteEntry(state: ILoading<IBloodTest>, index: number) {
@@ -83,5 +83,5 @@ function deleteEntry(state: ILoading<IBloodTest>, index: number) {
 
     const newArray = state.value.values;
     newArray.splice(index, 1);
-    return {...state, test: {...state.value, values: newArray}};
+    return {...state, value: {...state.value, values: newArray}};
 }
