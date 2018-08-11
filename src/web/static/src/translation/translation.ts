@@ -38,6 +38,7 @@ export default {
         to: [null, 'до'],
         tag: [null, 'Тег'],
         addLine: [null, 'Додати лінію'],
-        generate: ['Generate', 'Згенерувати']
+        generate: ['Generate', 'Згенерувати'],
+        or: [null, 'Або']
     }
 }

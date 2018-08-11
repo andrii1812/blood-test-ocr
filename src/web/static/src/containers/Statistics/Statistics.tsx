@@ -1,5 +1,5 @@
 import React = require("react");
-import { Card, CardContent, Typography, Grid, CardHeader, Divider, Select, CardActions, MenuItem, CircularProgress } from "@material-ui/core";
+import { Card, CardContent, Typography, Grid, CardHeader, Divider, Select, CardActions, MenuItem, CircularProgress, Paper } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
 import './stat.scss'
 import { DatePicker, List, ListItem, RaisedButton, LinearProgress } from "material-ui";
@@ -126,14 +126,15 @@ class Statistics extends React.Component<IStatisticsProps, IStatisticsState> {
                         <CardContent>
                             <Grid container spacing={16}>
                                 <Grid item md={6} sm={12} xs={12}>
-                                    <Typography variant="subheading">
-                                        <Translate id="statistics.dateRange">Date range</Translate>
-                                    </Typography>
                                     <Grid container direction="column" spacing={16}>
                                         <Grid item>
+                                            <Typography variant="subheading">
+                                                <Translate id="statistics.dateRange">Date range</Translate>
+                                            </Typography>                                                                                
                                             <Grid container alignItems="baseline" className="date-container">
                                                 <Grid item className="datepicker-container">
-                                                    <DatePicker 
+                                                    <DatePicker
+                                                        name="date1"
                                                         className="datepicker" 
                                                         textFieldStyle={{width: '100%', height: 32}}
                                                         value={this.state.from}
@@ -147,6 +148,7 @@ class Statistics extends React.Component<IStatisticsProps, IStatisticsState> {
                                                 </Grid>
                                                 <Grid item className="datepicker-container">
                                                     <DatePicker 
+                                                        name="date2"
                                                         className="datepicker" 
                                                         textFieldStyle={{width: '100%', height: 32}}
                                                         value={this.state.to}
@@ -156,10 +158,17 @@ class Statistics extends React.Component<IStatisticsProps, IStatisticsState> {
                                             </Grid>
                                         </Grid>
                                         <Grid item>
-                                            <Grid container alignItems="baseline">
+                                            <Grid container justify="center">
+                                                <Grid item>
+                                                    <Translate id="statistics.or">Or</Translate>
+                                                </Grid>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item>
+                                            <Grid container alignItems="baseline" direction="column">
                                                 <Grid item className="tag-label-container">
-                                                    <Typography variant="body1">
-                                                        <Translate id="statistics.tag">Tag</Translate>:
+                                                    <Typography variant="subheading">
+                                                        <Translate id="statistics.tag">Tag</Translate>
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item>
