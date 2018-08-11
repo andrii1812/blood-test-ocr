@@ -85,6 +85,15 @@ function fillRectPlugin(options: FillRectOptions) {
 }
 
 class DateGraph extends React.Component<IDateGraphProps> {
+    isFillFullscreen(rects: FillRect[], axis: string[]) {
+        for (const rect of rects) {
+            if (rect.from === axis[0] && rect.to === axis[axis.length - 1]) {
+                return true
+            }
+        }
+        return false
+    }
+
     render() {
         const data = this.props.data;
         const series = this.props.data.y;
@@ -95,11 +104,13 @@ class DateGraph extends React.Component<IDateGraphProps> {
         const plugins = [lineColorPlugin(series)];
         if (data.fill) {
             const rects = data.fill.map(x => ({...x, color: randomColor()}));
-            plugins.push(fillRectPlugin({
-                rects,
-                color: 'green',
-                opacity: 0.3
-            }))
+            if (!this.isFillFullscreen(rects, data.x)) {
+                plugins.push(fillRectPlugin({
+                    rects,
+                    color: 'green',
+                    opacity: 0.3
+                }))
+            }
         }
         const chartOptions = {
             ...defaultOptions, 
