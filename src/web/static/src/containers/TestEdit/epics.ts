@@ -50,6 +50,6 @@ async function saveTestOp(ingestResults: IBloodTest) {
 export const testEditEpic = (action$: ActionsObservable<AnyAction>, store: MiddlewareAPI<any>) : Observable<AnyAction> => {
     return action$.pipe(
         ofType(getType(saveTest)),
-        flatMap(() => fromPromise(saveTestOp(store.getState().test)
+        flatMap(() => fromPromise(saveTestOp(store.getState().value)
             .then((url: string) => push(url)))))
 }
