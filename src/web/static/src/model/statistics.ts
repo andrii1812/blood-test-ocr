@@ -30,7 +30,7 @@ export interface IGraphRequest {
 }
 
 export function getClassName(name: string) {
-    return 'ct-line-' + name;
+    return 'ct-line-' + name.replace(' ', '-');
 }
 
 export function seriesData(series: Series[]) {

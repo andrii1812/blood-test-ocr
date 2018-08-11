@@ -27,11 +27,11 @@ function lineColorPlugin(lines: Series[]) {
     return function(chart: any) {
         chart.on('draw', function(data: any) {
             if (data.type === 'line') {
-                lines.forEach(line => {
-                    const g = data.group;
-                    const classes = g.classes();
+                lines.forEach(line => {            
+                    const g = data.group;                    
+                    const classes = g.classes();                    
                     const className = getClassName(line.name)
-                    if (classes.indexOf(className) !== -1) {
+                    if (classes.indexOf(className) !== -1) {                        
                         g.getNode().style.stroke = line.color;
                     }
                 });
@@ -62,11 +62,15 @@ function fillRectPlugin(options: FillRectOptions) {
             for (const rect of options.rects) {
                 const startIndex = labels.indexOf(rect.from);
                 const endIndex = labels.indexOf(rect.to);
+                
+                if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) {                    
+                    continue
+                }
+
                 const height = chart.svg.height() 
                                 - chart.options.axisY.offset 
                                 - chart.options.chartPadding.top 
-                                + chart.options.chartPadding.bottom;
-
+                                + chart.options.chartPadding.bottom;                
                 chart.svg.elem('rect', {
                     x: xs[startIndex],
                     y: 15,
