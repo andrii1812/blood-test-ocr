@@ -29,8 +29,15 @@ export interface IGraphRequest {
     lines: Line[]
 }
 
+export function getClassName(name: string) {
+    return 'ct-line-' + name;
+}
+
 export function seriesData(series: Series[]) {
-    return series.map(x => x.data)
+    return series.map(x => ({
+        data: x.data,
+        className: getClassName(x.name)
+    }));
 }
 
 export function seriesNames(series: Series[]) {

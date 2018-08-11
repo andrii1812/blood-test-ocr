@@ -1,2 +1,14 @@
 @import './chartist-settings.scss';
 @import 'node_modules/chartist/dist/scss/chartist.scss';
+
+svg.ct-chart-bar, svg.ct-chart-line{
+    overflow: visible;
+}
+.ct-label.ct-label.ct-horizontal.ct-end {
+  transform: translate(-30%, 70%) rotate(45deg);
+  white-space:nowrap;
+}
+
+.graph-container {
+    padding: 24px;
+}

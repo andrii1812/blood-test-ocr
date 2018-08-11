@@ -16,6 +16,7 @@ import UploadedImages from "../UploadedImages/UploadedImages";
 import ParseExisting from "../ParseExisting/ParseExisting";
 import Statistics from "../Statistics/Statistics";
 import TopBar from "../../components/TopBar/TopBar";
+import Footer from "../../components/Footer";
 
 interface IAppProps extends LocalizeContextProps {
     data: IAppValuesState,
@@ -106,6 +107,7 @@ class App extends React.Component<IAppProps> {
                                 path='/stat'
                                 component={Statistics}/>
                         </Switch>
+                        <Footer/>
                     </Grid>                
                 </Grid>
             </div>

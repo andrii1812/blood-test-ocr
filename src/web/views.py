@@ -145,4 +145,8 @@ def get_statistics():
     to = data.get('to')
     tag = data.get('tag')
     lines = list(map(lambda x: x['name'], data['lines']))
+
+    if not lines:
+        raise ValueError('there should be at least one line selected')
+
     return jsonify(orm.generate_statistics(from_, to, tag, lines))

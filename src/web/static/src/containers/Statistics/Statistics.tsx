@@ -9,6 +9,8 @@ import DateGraph from '../../components/DateGraph/DateGraph'
 import { IAppState, ILoading, IGraphResponse, IGraphRequest, Line, ILoadingState } from "../../model";
 import { connect } from "react-redux";
 import { generateGraph } from "./actions";
+import { formatDate } from "../../model/util";
+import Clear from '@material-ui/icons/Clear';
 const randomColor = require('randomcolor');
 
 interface IStatisticsProps {
@@ -37,13 +39,13 @@ const mapDispatchToProps = (dispatch: any) => ({
 })
 
 class Statistics extends React.Component<IStatisticsProps, IStatisticsState> {
-    state = {
+    state: IStatisticsState = {
         from: undefined,
         to: undefined,
         lines: [],
         tag: '',
         newLine: ''
-    }
+    };
 
     Line = (line: Line, i: number) => (
         <ListItem className="line-container" key={i}>
@@ -65,11 +67,18 @@ class Statistics extends React.Component<IStatisticsProps, IStatisticsState> {
 
     dateChanged(name: string) {
         return (_: any, date: Date) => {
-            console.log(date);
             const update: any = {};
             update[name] = date;
             this.setState(update);
         }
+    }
+
+    clearDate(name: string) {
+        return () => {
+            let newState: any = {};
+            newState[name] = undefined;
+            this.setState(newState);
+        }        
     }
 
     tagChanged(e: any) {
@@ -92,12 +101,12 @@ class Statistics extends React.Component<IStatisticsProps, IStatisticsState> {
         this.setState({lines: newArr});
     }
 
-    generate() {
+    generate() {           
         const request: IGraphRequest = {
-            from: this.state.from,
-            to: this.state.to,
+            from: this.state.from && formatDate(this.state.from),
+            to: this.state.to && formatDate(this.state.to),
             lines: this.state.lines
-        };
+        };                
         if (this.state.tag) {
             request.tag = this.state.tag;
         }
@@ -123,24 +132,26 @@ class Statistics extends React.Component<IStatisticsProps, IStatisticsState> {
                                     <Grid container direction="column" spacing={16}>
                                         <Grid item>
                                             <Grid container alignItems="baseline" className="date-container">
-                                                <Grid item>
+                                                <Grid item className="datepicker-container">
                                                     <DatePicker 
                                                         className="datepicker" 
                                                         textFieldStyle={{width: '100%', height: 32}}
                                                         value={this.state.from}
                                                         onChange={this.dateChanged('from')}/>
+                                                    <Clear className="clear-button" onClick={this.clearDate('from')}/>
                                                 </Grid>
                                                 <Grid item className="to-label-container">                                    
                                                     <div className="to-label">
                                                         <Translate id="statistics.to">to</Translate>:
                                                     </div>                                    
                                                 </Grid>
-                                                <Grid item>
+                                                <Grid item className="datepicker-container">
                                                     <DatePicker 
                                                         className="datepicker" 
                                                         textFieldStyle={{width: '100%', height: 32}}
                                                         value={this.state.to}
                                                         onChange={this.dateChanged('to')}/>
+                                                    <Clear className="clear-button" onClick={this.clearDate('to')}/>
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -180,7 +191,7 @@ class Statistics extends React.Component<IStatisticsProps, IStatisticsState> {
                                             </Select>
                                         </Grid>
                                         <Grid item className="add-icon">
-                                            <Add onClick={this.addLine.bind(this)}/>
+                                            <Add onClick={this.addLine.bind(this)} className="add-icon-svg"/>
                                         </Grid>
                                     </Grid>
                                     <List>                                

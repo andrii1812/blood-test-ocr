@@ -20,6 +20,8 @@
 
 .add-icon {
     align-self: flex-end;
+    padding-left: 16px;
+    cursor: pointer;
 }
 
 .line-container {
@@ -44,4 +46,21 @@
 
 .line-name {
     min-width: 50px;
+}
+
+.datepicker-container {
+    position: relative;
+
+    & .clear-button {
+        position: absolute;
+        font-size: 20px;
+        right: 0;
+        top: 4px;
+        cursor: pointer;
+        display: none;
+    }
+}
+
+.datepicker-container:hover .clear-button {
+    display: inline;
 }

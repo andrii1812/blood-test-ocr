@@ -1,9 +1,9 @@
 import React = require('react');
-const chartistModule = require('react-chartist');
-const ChartistGraph = chartistModule.default;
+const chartistReactModule = require('react-chartist');
+const ChartistGraph = chartistReactModule.default;
 
 import './graph.scss';
-import { IGraphResponse, seriesData, getMin, getMax } from '../../model';
+import { IGraphResponse, seriesData, getMin, getMax, getClassName, Series } from '../../model';
 
 const defaultOptions = {
     showLine: true,
@@ -22,6 +22,23 @@ interface IDateGraphProps {
     data: IGraphResponse
 }
 
+function lineColorPlugin(lines: Series[]) {
+    return function(chart: any) {
+        chart.on('draw', function(data: any) {
+            if (data.type === 'line') {
+                lines.forEach(line => {
+                    const g = data.group;
+                    const classes = g.classes();
+                    const className = getClassName(line.name)
+                    if (classes.indexOf(className) !== -1) {
+                        g.getNode().style.stroke = line.color;
+                    }
+                });
+            }
+        });        
+    }
+}
+
 class DateGraph extends React.Component<IDateGraphProps> {
     render() {
         const data = this.props.data;
@@ -30,10 +47,19 @@ class DateGraph extends React.Component<IDateGraphProps> {
             labels: this.props.data.x,
             series: seriesData(series)
         }
-        const chartOptions = {...defaultOptions, low: getMin(data), high: getMax(data)};
+        const chartOptions = {
+            ...defaultOptions, 
+            low: getMin(data), 
+            high: getMax(data),
+            plugins: [
+                lineColorPlugin(series)
+            ]
+        };
 
         return (
-            <ChartistGraph data={chartData} options={chartOptions} type={'Line'} />
+            <div className="graph-container">
+                <ChartistGraph data={chartData} options={chartOptions} type={'Line'} className="ct-major-tenth" />
+            </div>
         )
     }
 }
