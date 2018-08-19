@@ -1,15 +1,19 @@
 import React = require("react");
 import { ITestImage, getScaledHeight, getScaledWidth } from "../../model";
 import { Modal, Paper } from "@material-ui/core";
-import NewTab from '@material-ui/icons/Launch'
 import './imageView.scss'
 import Clear from "@material-ui/icons/Clear";
+import NewTabOpener from "../NewTabOpener";
 
 interface IImageViewState {
     open: boolean
 }
 
-export class ImageView extends React.Component<ITestImage, IImageViewState> {    
+interface IImageViewProps extends ITestImage {
+    modalDisabled?: boolean
+}
+
+export class ImageView extends React.Component<IImageViewProps, IImageViewState> {    
     width = 120;
     state = {
         open: false
@@ -42,9 +46,7 @@ export class ImageView extends React.Component<ITestImage, IImageViewState> {
                 <div onClick={this.openModal.bind(this)}>
                     <img src={this.props.path} width={this.width} height={getScaledHeight(this.props, this.width)}/>
                 </div>
-                <a className="open-new-tab-icon" href={this.props.path} target="_blank">
-                    <NewTab/>
-                </a>
+                { !this.props.modalDisabled && <NewTabOpener path={this.props.path}/> }
                 <Modal 
                     open={this.state.open} 
                     onClose={this.handleClose.bind(this)}>

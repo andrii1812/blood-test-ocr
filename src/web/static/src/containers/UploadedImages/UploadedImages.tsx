@@ -10,6 +10,7 @@ import { ImageView } from "../../components/imageView/ImageView";
 import AddToPhotos from '@material-ui/icons/AddToPhotos';
 import { push } from "react-router-redux";
 import Clear from "@material-ui/icons/Clear";
+import NewTabOpener from '../../components/NewTabOpener';
 
 import './images.scss'
 
@@ -83,16 +84,19 @@ class UploadedImages extends React.Component<IUploadedImagesProps, IUploadedImag
                             <Grid container spacing={16} wrap="wrap">
                             {this.props.images && this.props.images.map((image, index) =>
                                 <Grid item key={index}>
-                                    <Paper>                                        
-                                        <ImageView {...image}/>
-                                        <Grid container justify="flex-end" className="image-actions-container">
-                                            <Grid item className="image-action">                     
-                                                <AddToPhotos onClick={() => image.id && this.props.parseExisting(image.id)}/>                                                   
-                                            </Grid>
-                                            <Grid item className="image-action" onClick={() => image.id && this.props.remove(image)}>
+                                    <Paper className="image-container">                                        
+                                        <ImageView modalDisabled {...image}/>
+                                        <div className="image-actions-container">
+                                            <div className="image-action">
+                                                <NewTabOpener path={image.path}/>
+                                            </div>
+                                            <div className="image-action" onClick={() => image.id && this.props.parseExisting(image.id)}>                     
+                                                <AddToPhotos/>                                                   
+                                            </div>
+                                            <div className="image-action" onClick={() => image.id && this.props.remove(image)}>
                                                 <Clear/>
-                                            </Grid>
-                                        </Grid>
+                                            </div>
+                                        </div>
                                     </Paper>
                                 </Grid>
                             )}
