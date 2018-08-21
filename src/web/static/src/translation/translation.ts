@@ -1,5 +1,6 @@
 export default {
     'title': [null, 'Розпізнавання Аналізів'],
+    required: ['Required', "Значення обов'язкове"],
     navlist: {
         images: ['Images', 'Зображення'],
         addNew: ['Add New', 'Додати новий'],
@@ -8,14 +9,15 @@ export default {
     },
     patchWarning: [null, 'Аналіз з такою ж датою вже існує! Поточні показники будуть додані до даного аналізу'],
     fileSelect: {
-        title: [null, 'Вхідний файл'],
+        title: [null, 'Виберіть зображення'],
         submit: ['Submit', 'Завантажити']
     },
     invalidValue: [null, 'Неправильне значення'],
     testEdit: {
         overall: [null, 'Загальна інформація'],
         parsedValues: [null, 'Розпізнані показники'],
-        save: ['Save', 'Зберегти']
+        save: ['Save', 'Зберегти'],
+        addNewValue: [null, 'Додати нове значення']
     },
     date: [null, 'Дата'],
     tag: [null, 'Тег'],

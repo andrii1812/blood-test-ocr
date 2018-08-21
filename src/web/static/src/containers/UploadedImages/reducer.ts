@@ -18,7 +18,7 @@ export default (state: IUploadedImagesState = initState, action: UploadedImagesA
         case getType(uploadImages.saveImage):
             return {...state, upload: true}
         case getType(uploadImages.saveImageFinished):
-            return {...state, upload: false}
+            return {...state, upload: false}            
         case getType(uploadImages.loadImagesFinished):
             return {...state, images: action.payload, imagesLoaded: true}
         case getType(uploadImages.deleteImageSuccess):

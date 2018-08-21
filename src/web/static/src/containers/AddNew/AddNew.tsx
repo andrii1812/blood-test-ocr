@@ -1,61 +1,64 @@
 import * as React from "react";
-import {IBloodTest, IAppState, IUploadFile, ILoadingState } from '../../model'
-import FileSelect from "../../components/FileSelect";
+import {IAppState, ITestImage, IBloodTest } from '../../model'
 import TestEdit from "../TestEdit/TestEdit";
-import { Grid, CircularProgress } from "@material-ui/core";
-import { ingestFile, fileSelected } from "./actions";
+import { Grid } from "@material-ui/core";
 import { connect } from "react-redux";
 import { SubspaceProvider } from "react-redux-subspace";
 import { Translate } from "react-localize-redux";
-import { clearTest } from "../TestEdit/actions";
+import { clearTest, testLoaded } from "../TestEdit/actions";
 import { namespacedAction } from "redux-subspace";
-import ParseFailed from "../../components/ParseFailed";
+import { loadImages } from "../UploadedImages/actions";
+import ImageSelect from '../../components/ImageSelect/ImageSelect';
+import {initialBloodTest} from '../../model/bloodTest'
 
 interface IAddNewProps {
     references: string[],
     tags: string[],
-    ingestResults: IBloodTest | null,
-    loadState: ILoadingState
-    ingestFile: () => void,
-    fileSelected: (file: IUploadFile) => void,
-    clearTest: () => void
+    images: ITestImage[] | null,
+    test: IBloodTest | null,
+    clearTest: () => void,
+    loadImages: () => void,
+    loadTest: (test: IBloodTest) => void
 }
 
 const mapStateToProps = (state: IAppState) => ({
-    ingestResults: state.addNew.editValues.value,
-    loadState: state.addNew.editValues.state,
     references: state.app.references,
     tags: state.app.tags,
+    images: state.uploadedImages.images,
+    test: state.addNew.editValues.value
 })
 
 const mapDispatchToProps = (dispatch: any) => ({
-    ingestFile: (): void => dispatch(ingestFile()),
-    fileSelected: (file: IUploadFile): void => dispatch(fileSelected(file)),
-    clearTest: () => dispatch(namespacedAction('editValues')(clearTest()))
+    clearTest: () => dispatch(namespacedAction('editValues')(clearTest())),
+    loadImages: () => dispatch(loadImages()),
+    loadTest: (test: IBloodTest) => dispatch(namespacedAction('editValues')(testLoaded(test)))
 })
 
 class AddNew extends React.Component<IAddNewProps> {
-    constructor(props: IAddNewProps) {
-        super(props);
-    }
 
     componentDidMount(){
+        if (this.props.images && this.props.images.length === 0) {
+            this.props.loadImages();
+        }
+
         this.props.clearTest();
+    }
+
+    imagesSelected(images: ITestImage[]) {
+        const state = initialBloodTest()
+        state.images = images;
+        this.props.loadTest(state);
     }
 
     render() {
         return (
             <Grid container spacing={16} direction="column" justify="flex-end">
-                <Grid item>
-                    <FileSelect fileSelected={this.props.fileSelected} submit={this.props.ingestFile}/>
-                </Grid>
-                {
-                    this.props.loadState === ILoadingState.LOAD_FAILURE && <ParseFailed/>
-                }
-                {
-                    this.props.loadState === ILoadingState.LOADING && <CircularProgress style={{margin: '0 auto'}}/>
-                }
-                {this.props.loadState === ILoadingState.LOAD_SUCCESS && 
+                {!this.props.test && 
+                    <Grid item>
+                        {this.props.images && <ImageSelect list={this.props.images} selected={this.imagesSelected.bind(this)}/>}
+                    </Grid>              
+                } 
+                {this.props.test && 
                     (<Grid item>
                         <SubspaceProvider mapState={(s: IAppState) => s.addNew.editValues.value} namespace="editValues">
                             <Translate>
@@ -66,7 +69,7 @@ class AddNew extends React.Component<IAddNewProps> {
                             </Translate>
                         </SubspaceProvider>
                     </Grid>)
-                }
+                }  
             </Grid>                 
         )
     }

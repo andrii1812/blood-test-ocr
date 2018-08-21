@@ -33,3 +33,5 @@ export interface IAddEntryPayload {
     value: string
 }
 export const addNewEntry = createStandardAction('ADD_NEW_ENTRY')<IAddEntryPayload>();
+
+export const dateChanged = createStandardAction('DATE_CHANGED')<string>();

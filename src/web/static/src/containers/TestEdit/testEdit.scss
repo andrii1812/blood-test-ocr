@@ -31,10 +31,20 @@
     }
 }
 
-.tag-select {
+.add-new {
+    padding-top: 16px;
+}
+
+.tag-select, .date-edit {
     width: 187px;
 }
 
-.add-new-container {
-    opacity: 0.7;
+.date-edit {
+    display: inline-block;  
+    height: 42px;
+    font-size: 16px; 
+}
+
+.label {
+    min-width: 50px;
 }

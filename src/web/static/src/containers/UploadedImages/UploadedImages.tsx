@@ -11,6 +11,7 @@ import AddToPhotos from '@material-ui/icons/AddToPhotos';
 import { push } from "react-router-redux";
 import Clear from "@material-ui/icons/Clear";
 import NewTabOpener from '../../components/NewTabOpener';
+import ImageSelect from '../../components/ImageSelect/ImageSelect';
 
 import './images.scss'
 

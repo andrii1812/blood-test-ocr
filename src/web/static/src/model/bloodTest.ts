@@ -10,8 +10,9 @@ export interface IBloodTest {
     patchId?: string
 }
 
-export const initialBloodTest = () => ({
+export const initialBloodTest = () : IBloodTest => ({
     date: '',
+    tag: 'None',
     images: [],
     values: []
 })

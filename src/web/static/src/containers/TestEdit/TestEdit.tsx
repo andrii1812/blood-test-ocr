@@ -4,10 +4,11 @@ import { Card, CardHeader, CardText, RaisedButton, MenuItem } from "material-ui"
 import { CardActions, Grid, Typography, TextField, Select, Paper } from "@material-ui/core";
 import { ImageView } from "../../components/imageView/ImageView";
 import { connect } from "react-redux";
-import { nameChanged, deleteEntry, valueChanged, saveTest, tagChanged, addNewEntry } from "./actions";
+import { nameChanged, deleteEntry, valueChanged, saveTest, tagChanged, addNewEntry, dateChanged } from "./actions";
 import { namespacedAction } from "redux-subspace";
 import PatchWarning from "../../components/patchWarning/PatchWarning";
 import ReferencetextInput from "../../components/ReferenceTextInput";
+import DateEdit from '../../components/DateEdit';
 import Delete from "@material-ui/icons/Delete";
 import Add from '@material-ui/icons/Add';
 import Clear from '@material-ui/icons/Clear';
@@ -24,6 +25,7 @@ interface ITestEditProps {
     valueChanged: (index: number, value: string) => void
     deleteEntry: (index: number) => void,
     tagChanged: (tag: string) => void,
+    dateChanged: (date: string) => void,
     addNewEntry: (name: string, value: string) => void
 }
 
@@ -38,6 +40,7 @@ const mapDispatchToProps = (dispatch: any, props: any) => ({
     valueChanged: (index: number, value: string) => dispatch(namespacedAction(props.namespace)(valueChanged({index, value}))),
     deleteEntry: (index: number) => dispatch(namespacedAction(props.namespace)(deleteEntry({index}))),
     tagChanged: (tag: string) => dispatch(namespacedAction(props.namespace)(tagChanged(tag))),
+    dateChanged: (date: string) => dispatch(namespacedAction(props.namespace)(dateChanged(date))),
     addNewEntry: (name: string, value: string) => dispatch(namespacedAction(props.namespace)(addNewEntry({name, value}))),
 })
 
@@ -45,7 +48,7 @@ class TestEdit extends React.Component<ITestEditProps> {
     
     state = {
         name: '',
-        value: ''
+        value: '0'
     }
 
     constructor(props: any) {
@@ -70,7 +73,7 @@ class TestEdit extends React.Component<ITestEditProps> {
     }
 
     clearNewEntry() {
-        this.setState({name: '', value: ''});
+        this.setState({name: '', value: '0'});
     }    
 
     isSaveEnabled(): boolean {
@@ -80,12 +83,17 @@ class TestEdit extends React.Component<ITestEditProps> {
                 enabled = false;
             }
         }
-        return enabled;
+        return enabled && !!this.props.data.date;
     }
 
     onTagChange(e: any) {
         this.props.tagChanged(e.target.value);
     }
+
+    onDateChanged(date: string) {
+        this.props.dateChanged(date)
+    }
+
 
     render() {
         return (
@@ -101,15 +109,22 @@ class TestEdit extends React.Component<ITestEditProps> {
                             </Typography>                            
                         </Grid>
                         <Grid item md={9} sm={12} xs={12}>        
-                            <Grid container spacing={8} direction="column">                                                                         
+                            <Grid container spacing={16} direction="column">                                                                         
                                 <Grid item>
-                                    <Typography variant="body2">
-                                        <Translate id="date">Date</Translate>: {this.props.data.date}
-                                    </Typography>
+                                    <Grid container alignItems="center" spacing={16}>
+                                        <Grid item className="label">
+                                            <Typography variant="body2">
+                                                <Translate id="date">Date</Translate>:                                         
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item>
+                                            <DateEdit className="date-edit" date={this.props.data.date} onChange={this.onDateChanged.bind(this)}/>                                            
+                                        </Grid>
+                                    </Grid>                                                                        
                                 </Grid>
                                 <Grid item>
                                     <Grid container alignItems="baseline" spacing={16}>
-                                        <Grid item>
+                                        <Grid item className="label">
                                             <Typography variant="body2">
                                                 <Translate id="tag">Tag</Translate>:
                                             </Typography>
@@ -149,7 +164,7 @@ class TestEdit extends React.Component<ITestEditProps> {
                             {this.props.data.values.map((x, index) => {
                                 const name = x[0], value = x[1];
                                 return (<Grid item key={index}>
-                                    <Grid container spacing={8} alignItems="baseline" className="edit-container">                                
+                                    <Grid container spacing={8} alignItems="flex-start" className="edit-container">                                
                                         <Grid item className="name-input">
                                             <ReferencetextInput                                            
                                                 name={name} 
@@ -170,10 +185,14 @@ class TestEdit extends React.Component<ITestEditProps> {
                                     </Grid>
                                 </Grid>)
                             })}
-                                <Grid item>
-                                    <Grid container spacing={8} alignItems="baseline" className="add-new-container">                                
+                                <Grid item className="add-new">
+                                    <Typography variant="subheading">
+                                        <Translate id="testEdit.addNewValue">Add new value</Translate>
+                                    </Typography>
+                                    <Grid container spacing={8} alignItems="flex-start" className="add-new-container">                                
                                         <Grid item className="name-input">
-                                            <ReferencetextInput                                            
+                                            <ReferencetextInput
+                                                validationEnabled={false}
                                                 name={this.state.name} 
                                                 value={this.state.name} 
                                                 references={this.props.references}
