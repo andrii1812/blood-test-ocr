@@ -13,7 +13,11 @@ def get_lines_bounding_boxes(tool, image):
     )
 
 
-def get_date(lines):
+def is_in_second_quarter(pos, dim):
+    return pos[0] > dim[0] / 2 and pos[1] < dim[1] / 2
+
+
+def get_date(lines, image_size):
     line = None
     for start in constants.DATE_LINES:
         if line:
@@ -24,6 +28,15 @@ def get_date(lines):
         raise ValueError('date line not found')
 
     date = util.get_date(line.word_boxes)
+
+    if not date:
+        for l in lines:
+            if is_in_second_quarter(l.position[0], image_size):
+                date_box = util.get_date(l.word_boxes)
+                if date_box:
+                    return date_box.content
+        raise ValueError('date not found')
+
     return date.content
 
 

@@ -18,7 +18,7 @@ def parse_image(image, references):
     tool = tooling.get_available_tool()
     lines = image_parse.get_lines_bounding_boxes(tool, image)
     log_lines(lines)
-    date = image_parse.get_date(lines)
+    date = image_parse.get_date(lines, image.size)
     tests = image_parse.get_blood_test_values(lines, references)
 
     return Tests(date, tests)
@@ -26,8 +26,8 @@ def parse_image(image, references):
 
 def test():
     logging.basicConfig(level=logging.DEBUG)
+    image = Image.open('data/uploads/images/15332245560004801100423587202215.jpg')
     if not os.path.exists('dump.pickle'):
-        image = Image.open('test_images/IMG_20180710_170326.jpg')
         tool = tooling.get_available_tool()
         lines = image_parse.get_lines_bounding_boxes(tool, image)
         with open('dump.pickle', 'wb') as file:
@@ -37,5 +37,5 @@ def test():
             lines = pickle.load(file)
 
     log_lines(lines)
-    tests = image_parse.get_blood_test_values(lines, [])
-    print(tests)
+    date = image_parse.get_date(lines, image.size)
+    print(date)
