@@ -53,11 +53,9 @@ class AddNew extends React.Component<IAddNewProps> {
     render() {
         return (
             <Grid container spacing={16} direction="column" justify="flex-end">
-                {!this.props.test && 
-                    <Grid item>
-                        {this.props.images && <ImageSelect list={this.props.images} selected={this.imagesSelected.bind(this)}/>}
-                    </Grid>              
-                } 
+                <Grid item>
+                    {this.props.images && <ImageSelect list={this.props.images} selected={this.imagesSelected.bind(this)}/>}
+                </Grid>              
                 {this.props.test && 
                     (<Grid item>
                         <SubspaceProvider mapState={(s: IAppState) => s.addNew.editValues.value} namespace="editValues">

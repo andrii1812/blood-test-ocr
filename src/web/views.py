@@ -89,9 +89,9 @@ class Test(Resource):
         test_data = request.json
         date = test_data['date']
         values = test_data['values']
-        image_id = test_data['images'][0]['id']
+        images = test_data['images']
         tag = test_data.get('tag')
-        test_id = orm.save_test(date, values, image_id, tag)
+        test_id = orm.save_test(date, values, images, tag)
         return test_id
 
     def put(self, test_id):

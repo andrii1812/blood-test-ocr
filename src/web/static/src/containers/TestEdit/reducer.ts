@@ -38,6 +38,11 @@ export default (state: ILoading<IBloodTest> = defaultState, action: EditValuesAc
                 throw new Error('edit on null data');
             }
             return {...state, value: {...state.value, date: action.payload}}
+        case getType(editValues.patchIdChanged):
+            if(!state.value) {
+                throw new Error('edit on null data');
+            }
+            return {...state, value: {...state.value, ...action.payload}}
         case getType(editValues.addNewEntry):
             if(!state.value) {
                 throw new Error('edit on null data');

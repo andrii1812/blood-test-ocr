@@ -11,4 +11,9 @@ $warning-color: #FBC02D;
     & .warning-icon, & .warning-text {
         color: $warning-color;
     }  
+
+    & .warning-text {
+        padding-left: 4px;
+        vertical-align: super;
+    }  
 }

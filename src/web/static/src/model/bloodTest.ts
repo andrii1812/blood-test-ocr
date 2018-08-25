@@ -17,15 +17,20 @@ export const initialBloodTest = () : IBloodTest => ({
     values: []
 })
 
-export async function addPatchId(json: any) {
-    const res = await fetch(urls.findTestId(json.date))
+
+export interface IPatchResponse {
+    patchId?: string,
+    tag?: string
+}
+
+export async function getPatchId(date: string): Promise<IPatchResponse> {
+    const res = await fetch(urls.findTestId(date))
 
     if (!res.ok) {
-        return;
+        return {};
     }
 
-    const resJson = await res.json();
+    const {id, tag} = await res.json();
 
-    json.patchId = resJson.id;
-    json.tag = resJson.tag;
+    return {patchId: id, tag}
 }

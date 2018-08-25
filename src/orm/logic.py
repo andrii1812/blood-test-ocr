@@ -57,7 +57,7 @@ def check_tag(tag_name):
 
 
 @orm.db_session
-def save_test(date, values, image_id, tag):
+def save_test(date, values, images, tag):
     if find_test_id(date):
         raise ValueError('test with date {0} already exists'.format(date))
 
@@ -68,9 +68,9 @@ def save_test(date, values, image_id, tag):
     else:
         tag = get_default_tag()
 
-    image = TestImage[image_id]
+    images = [TestImage[image['id']] for image in images]
     test_values = create_test_values(values)
-    test = BloodTest(date=date, values=test_values, images=[image], tag=tag)
+    test = BloodTest(date=date, values=test_values, images=images, tag=tag)
 
     orm.commit()
     return test.id

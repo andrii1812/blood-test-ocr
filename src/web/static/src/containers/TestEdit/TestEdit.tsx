@@ -1,8 +1,7 @@
 import React = require("react");
-import { IBloodTest } from "../../model";
+import { IBloodTest, ITestImage } from "../../model";
 import { Card, CardHeader, CardText, RaisedButton, MenuItem } from "material-ui";
 import { CardActions, Grid, Typography, TextField, Select, Paper } from "@material-ui/core";
-import { ImageView } from "../../components/imageView/ImageView";
 import { connect } from "react-redux";
 import { nameChanged, deleteEntry, valueChanged, saveTest, tagChanged, addNewEntry, dateChanged } from "./actions";
 import { namespacedAction } from "redux-subspace";
@@ -13,6 +12,7 @@ import Delete from "@material-ui/icons/Delete";
 import Add from '@material-ui/icons/Add';
 import Clear from '@material-ui/icons/Clear';
 import { Translate } from "react-localize-redux";
+import ImageListView from '../../components/ImageListView/ImageListView';
 import './testEdit.scss'
 
 interface ITestEditProps {
@@ -138,17 +138,7 @@ class TestEdit extends React.Component<ITestEditProps> {
                                 </Grid>
                                 {this.props.data.patchId && <PatchWarning/>}
                                 <Grid item>
-                                    <Grid container spacing={16}>
-                                        {this.props.data.images.map((x, i) => {                                            
-                                            return (
-                                                <Grid item key={i}>  
-                                                    <Paper>                                  
-                                                        <ImageView {...x}/>
-                                                    </Paper>
-                                                </Grid>
-                                            )
-                                        })}   
-                                    </Grid>     
+                                    <ImageListView images={this.props.data.images}/>
                                 </Grid>                                                        
                             </Grid>
                         </Grid>

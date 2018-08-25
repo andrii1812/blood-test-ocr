@@ -14,6 +14,7 @@ import NewTabOpener from '../../components/NewTabOpener';
 import ImageSelect from '../../components/ImageSelect/ImageSelect';
 
 import './images.scss'
+import PatchWarning from "../../components/patchWarning/PatchWarning";
 
 interface IUploadedImagesProps {
     images: ITestImage[] | null,

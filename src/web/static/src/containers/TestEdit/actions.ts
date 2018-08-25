@@ -1,5 +1,5 @@
 import { createStandardAction } from "typesafe-actions";
-import { IBloodTest } from "../../model";
+import { IBloodTest, IPatchResponse } from "../../model";
 
 export const loadTestStarted = createStandardAction('LOAD_TEST_STARTED')();
 export const loadTest = createStandardAction('LOAD_TEST')<string>();
@@ -35,3 +35,5 @@ export interface IAddEntryPayload {
 export const addNewEntry = createStandardAction('ADD_NEW_ENTRY')<IAddEntryPayload>();
 
 export const dateChanged = createStandardAction('DATE_CHANGED')<string>();
+
+export const patchIdChanged = createStandardAction('PATCH_ID_CHANGED')<IPatchResponse>();

@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { getType } from "typesafe-actions";
 import { switchMap } from "rxjs/operators";
 import urls from "../../model/urls";
-import { addPatchId } from "../../model";
+import { getPatchId } from "../../model";
 
 export const parseExistingEpic = (action$: ActionsObservable<AnyAction>, _: MiddlewareAPI<any>) : Observable<AnyAction> => {
     return action$.pipe(
@@ -17,13 +17,13 @@ export const parseExistingEpic = (action$: ActionsObservable<AnyAction>, _: Midd
                         return loadTestFailed();
                     }
 
-                    const json = await x.json();
+                    let json = await x.json();
 
                     if (!json) {         
                         return loadTestFailed();
                     }
                 
-                    await addPatchId(json);
+                    json = {...json, ...(await getPatchId(json.date))};
 
                     return testLoaded(json);
                 })

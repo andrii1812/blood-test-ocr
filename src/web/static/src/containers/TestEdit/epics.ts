@@ -1,7 +1,7 @@
-import { ofType, ActionsObservable } from "redux-observable";
+import { ofType, ActionsObservable, combineEpics } from "redux-observable";
 import { getType } from "typesafe-actions";
-import { saveTest } from "./actions";
-import { IBloodTest } from "../../model";
+import { saveTest, dateChanged, patchIdChanged } from "./actions";
+import { IBloodTest, getPatchId } from "../../model";
 import { MiddlewareAPI, AnyAction } from "redux";
 import { Observable } from "rxjs";
 import { flatMap } from "rxjs/operators";
@@ -35,7 +35,13 @@ async function saveTestOp(ingestResults: IBloodTest) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(ingestResults)
-    })
+    }).then(x => {
+        if (!x.ok) {
+            throw new Error('test is not saved');
+        }
+        
+        return x;
+    });
 
     if(ingestResults.id) {
         return '/test';
@@ -47,9 +53,18 @@ async function saveTestOp(ingestResults: IBloodTest) {
 }
 
 
-export const testEditEpic = (action$: ActionsObservable<AnyAction>, store: MiddlewareAPI<any>) : Observable<AnyAction> => {
+const saveTestEpic = (action$: ActionsObservable<AnyAction>, store: MiddlewareAPI<any>) : Observable<AnyAction> => {
     return action$.pipe(
         ofType(getType(saveTest)),
         flatMap(() => fromPromise(saveTestOp(store.getState().value)
             .then((url: string) => push(url)))))
 }
+
+const dateChangedEpic = (action$: ActionsObservable<AnyAction>, store: MiddlewareAPI<any>) : Observable<AnyAction> => {
+    return action$.pipe(
+        ofType(getType(dateChanged)),
+        flatMap(() => fromPromise(getPatchId(store.getState().value.date)
+            .then((res) => patchIdChanged(res)))))
+}
+
+export const testEditEpic = combineEpics(saveTestEpic, dateChangedEpic)

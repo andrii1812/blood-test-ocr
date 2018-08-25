@@ -1,0 +1,25 @@
+$main-color: rgb(63, 81, 181);
+
+.add-container {
+    width: 120px;
+    height: 160px;
+    position: relative;
+    box-shadow: 1px 1px 5px rgba($main-color, 0.4);
+    cursor: pointer;
+
+    & .add-image-icon {
+        font-size: 40px;
+    }
+
+    &:active {
+        box-shadow: 1px 1px 5px rgba($main-color, 0.4) inset;
+    }
+}
+
+.add-image-icon {
+    $width-height: 1em;
+    position: absolute;
+    color: $main-color;
+    left: calc(50% - #{$width-height} / 2);
+    top: calc(50% - #{$width-height} / 2);
+}
