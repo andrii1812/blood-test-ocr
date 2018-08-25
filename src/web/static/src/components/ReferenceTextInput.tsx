@@ -7,7 +7,7 @@ interface IReferencetextInputProps {
     name: string;
     value: string;
     references: string[];
-    validationEnabled?: boolean
+    validationDisabled?: boolean
     onChange: (name: string, newName: string) => void
 }
 
@@ -18,7 +18,7 @@ export default class ReferencetextInput extends React.Component<IReferencetextIn
     }
 
     isValid() {
-        return !this.props.validationEnabled || this.props.references.indexOf(this.props.value) !== -1;
+        return this.props.validationDisabled || !this.props.validationDisabled && this.props.references.indexOf(this.props.value) !== -1;
     }
 
     onChange(e: any) {

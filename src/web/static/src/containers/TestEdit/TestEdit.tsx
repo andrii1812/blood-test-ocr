@@ -182,7 +182,7 @@ class TestEdit extends React.Component<ITestEditProps> {
                                     <Grid container spacing={8} alignItems="flex-start" className="add-new-container">                                
                                         <Grid item className="name-input">
                                             <ReferencetextInput
-                                                validationEnabled={false}
+                                                validationDisabled={true}
                                                 name={this.state.name} 
                                                 value={this.state.name} 
                                                 references={this.props.references}
