@@ -43,5 +43,10 @@ class TestImage(db.Entity):
 path = os.path.join(config.UPLOADS_DEFAULT_DEST, config.UPLOADS_SET_NAME)
 if not os.path.exists(path):
     os.makedirs(path)
-db.bind('sqlite', os.path.join('..', config.DATABASE_PATH), create_db=True)
+db.bind('sqlite', config.DATABASE_PATH, create_db=True)
 db.generate_mapping(create_tables=True)
+
+all_entities = [ReferenceName, Tag, TestImage, BloodTestEntry, BloodTest]
+
+with db.set_perms_for(*all_entities):
+    perm('view', group='anybody')
