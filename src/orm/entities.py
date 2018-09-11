@@ -8,7 +8,9 @@ db = Database()
 
 
 class ReferenceName(db.Entity):
-    name = PrimaryKey(str)
+    id = PrimaryKey(int, auto=True)
+    name = Required(str, unique=True)
+    sort_order = Required(int)
     blood_test_entries = Set('BloodTestEntry')
 
 
@@ -19,7 +21,9 @@ class BloodTestEntry(db.Entity):
 
 
 class Tag(db.Entity):
-    name = PrimaryKey(str)
+    id = PrimaryKey(int, auto=True)
+    name = Required(str, unique=True)
+    sort_order = Required(int)
     blood_tests = Set('BloodTest')
 
 

@@ -215,7 +215,8 @@ def max_date():
 def array_where_clause(name, array):
     dic = dict(('p' + str(i), val) for i, val in enumerate(array))
     format_ = '{0} = {1} '
-    terms = map(lambda x: format_.format(name, '$' + x[0]), dic.items())
+    terms = map(lambda x: format_.format(name, '(select id from ReferenceName where name = $' + x[0] + ')'),
+                dic.items())
     return "OR ".join(terms), dic
 
 
@@ -228,7 +229,7 @@ def generate_statistics(from_, to, tag, lines):
     lines_clause, lines_params = array_where_clause("be.name", lines)
 
     if tag:
-        where_clause = "tag = $tag"
+        where_clause = "tag = (select id from Tag where name = $tag)"
     else:
         where_clause = "date <= datetime($to, '+1 second') AND date >= $f"
     sql = "SELECT bt.date, bt.tag, be.value, be.name FROM " + \
@@ -236,7 +237,7 @@ def generate_statistics(from_, to, tag, lines):
           "on be.id = bte.bloodtestentry " + \
           "JOIN BloodTest bt on bt.id = bte.bloodtest " + \
           "WHERE (" + lines_clause + ") AND bt.id in " + \
-          "(SELECT id from BloodTest WHERE " + where_clause + ")" + \
+          "(SELECT id from BloodTest WHERE " + where_clause + ") " + \
           "ORDER BY bt.date ASC "
 
     sel = db.select(sql, globals={'f': from_, 'to': to, 'tag': tag, **lines_params})
@@ -247,12 +248,13 @@ def generate_statistics(from_, to, tag, lines):
     y = []
 
     for ref_name in lines:
-        values = list(map(lambda x: x[2], filter(lambda x: x[3] == ref_name, sel)))
+        ref_obj = select(x for x in ReferenceName if x.name == ref_name).first()
+        values = list(map(lambda x: x[2], filter(lambda x: x[3] == ref_obj.id, sel)))
         data = {'name': ref_name, 'data': values}
         y.append(data)
 
     fill_rect = []
-    default_tag = get_default_tag().name
+    default_tag = get_default_tag().id
     for k, g in itertools.groupby(sel, lambda x: x[1]):
         if k == default_tag:
             continue
