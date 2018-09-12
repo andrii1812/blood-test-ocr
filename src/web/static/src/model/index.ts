@@ -27,9 +27,24 @@ export interface IAddNewState {
     editValues: ILoading<IBloodTest>
 }
 
+export interface ISortable {
+    name: string,
+    sortOrder: number
+}
+
+export const sortAsc = (s: ISortable[]) => s.sort((x, y) => x.sortOrder - y.sortOrder)
+export const findIndexByName = (s: ISortable[], v: string) => {
+    for (let i = 0; i < s.length; i++) {
+        if(s[i].name == v) {
+            return i
+        }
+    }
+    return -1;
+}
+
 export interface IAppValuesState {
-    references: string[],
-    tags: string[],
+    references: ISortable[],
+    tags: ISortable[],
 }
 
 export interface IUploadedImagesState {

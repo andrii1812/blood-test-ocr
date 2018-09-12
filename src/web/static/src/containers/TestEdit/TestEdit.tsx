@@ -1,5 +1,5 @@
 import React = require("react");
-import { IBloodTest, ITestImage } from "../../model";
+import { IBloodTest, ISortable, sortAsc, findIndexByName } from "../../model";
 import { Card, CardHeader, CardText, RaisedButton, MenuItem } from "material-ui";
 import { CardActions, Grid, Typography, TextField, Select, Paper } from "@material-ui/core";
 import { connect } from "react-redux";
@@ -17,8 +17,8 @@ import './testEdit.scss'
 
 interface ITestEditProps {
     data: IBloodTest,
-    references: string[],
-    tags: string[],
+    references: ISortable[],
+    tags: ISortable[],
     title: string,
     save: () => void,
     nameChanged: (index: number, newName: string) => void,
@@ -79,7 +79,7 @@ class TestEdit extends React.Component<ITestEditProps> {
     isSaveEnabled(): boolean {
         let enabled = true;
         for(let item of this.props.data.values) {
-            if (this.props.references.indexOf(item[0]) === -1) {
+            if (findIndexByName(this.props.references, item[0]) === -1) {
                 enabled = false;
             }
         }
@@ -92,6 +92,14 @@ class TestEdit extends React.Component<ITestEditProps> {
 
     onDateChanged(date: string) {
         this.props.dateChanged(date)
+    }
+
+    sortByRef(values: string[][]) {
+        const getRef = (x: string) => {
+            return this.props.references.filter(y => y.name === x)[0].sortOrder
+        }
+
+        return values.sort((x, y) => getRef(x[0]) - getRef(y[0]))
     }
 
 
@@ -131,7 +139,7 @@ class TestEdit extends React.Component<ITestEditProps> {
                                         </Grid>
                                         <Grid item>
                                             <Select value={this.props.data.tag} onChange={this.onTagChange.bind(this)} className="tag-select">
-                                                {this.props.tags.map(x => <MenuItem key={x} value={x}>{x}</MenuItem>)}
+                                                {sortAsc(this.props.tags).map(x => <MenuItem key={x.name} value={x.name}>{x.name}</MenuItem>)}
                                             </Select>
                                         </Grid>
                                     </Grid>
@@ -151,8 +159,8 @@ class TestEdit extends React.Component<ITestEditProps> {
                         </Grid>
                         <Grid item md={9} sm={12} xs={12}>
                             <Grid container direction='column'>
-                            {this.props.data.values.map((x, index) => {
-                                const name = x[0], value = x[1];
+                            {this.sortByRef(this.props.data.values).map((x, index) => {
+                                const name = x[0], value = x[1];                                
                                 return (<Grid item key={index}>
                                     <Grid container spacing={8} alignItems="flex-start" className="edit-container">                                
                                         <Grid item className="name-input">

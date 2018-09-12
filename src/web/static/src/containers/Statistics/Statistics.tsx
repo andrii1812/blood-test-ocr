@@ -6,7 +6,7 @@ import { DatePicker, List, ListItem, RaisedButton, LinearProgress } from "materi
 import Add from "@material-ui/icons/Add";
 import Delete from "@material-ui/icons/Delete";
 import DateGraph from '../../components/DateGraph/DateGraph'
-import { IAppState, ILoading, IGraphResponse, IGraphRequest, Line, ILoadingState } from "../../model";
+import { IAppState, ILoading, IGraphResponse, IGraphRequest, Line, ILoadingState, ISortable, sortAsc } from "../../model";
 import { connect } from "react-redux";
 import { generateGraph } from "./actions";
 import { formatDate } from "../../model/util";
@@ -14,8 +14,8 @@ import Clear from '@material-ui/icons/Clear';
 const randomColor = require('randomcolor');
 
 interface IStatisticsProps {
-    tags: string[],
-    references: string[],
+    tags: ISortable[],
+    references: ISortable[],
     graph: ILoading<IGraphResponse>,
     generateGraph: (request: IGraphRequest) => void
 }
@@ -175,8 +175,8 @@ class Statistics extends React.Component<IStatisticsProps, IStatisticsState> {
                                                     <Select className="tag-select" 
                                                             value={this.state.tag}
                                                             onChange={this.tagChanged.bind(this)}>
-                                                        {this.props.tags.map((x, i) => 
-                                                            <MenuItem key={i} value={x}>{x}</MenuItem>
+                                                        {sortAsc(this.props.tags).map((x, i) => 
+                                                            <MenuItem key={i} value={x.name}>{x.name}</MenuItem>
                                                         )}
                                                         <MenuItem value=""></MenuItem>
                                                     </Select>
@@ -194,8 +194,8 @@ class Statistics extends React.Component<IStatisticsProps, IStatisticsState> {
                                             <Select className="tag-select"
                                                     value={this.state.newLine}
                                                     onChange={this.newLineChanged.bind(this)}>
-                                                {this.props.references.map((x, i) => 
-                                                    <MenuItem key={i} value={x}>{x}</MenuItem>
+                                                {sortAsc(this.props.references).map((x, i) => 
+                                                    <MenuItem key={i} value={x.name}>{x.name}</MenuItem>
                                                 )}
                                             </Select>
                                         </Grid>

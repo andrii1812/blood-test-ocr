@@ -1,5 +1,5 @@
 import * as React from "react";
-import {IAppState, ITestImage, IBloodTest } from '../../model'
+import {IAppState, ITestImage, IBloodTest, ISortable } from '../../model'
 import TestEdit from "../TestEdit/TestEdit";
 import { Grid } from "@material-ui/core";
 import { connect } from "react-redux";
@@ -12,8 +12,8 @@ import ImageSelect from '../../components/ImageSelect/ImageSelect';
 import {initialBloodTest} from '../../model/bloodTest'
 
 interface IAddNewProps {
-    references: string[],
-    tags: string[],
+    references: ISortable[],
+    tags: ISortable[],
     images: ITestImage[] | null,
     test: IBloodTest | null,
     clearTest: () => void,

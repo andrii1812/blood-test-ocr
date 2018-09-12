@@ -2,11 +2,12 @@ import React = require("react");
 import { MenuItem } from "material-ui";
 import { FormControl, FormHelperText, Select, TextField } from "@material-ui/core";
 import { Translate } from "react-localize-redux";
+import { ISortable, sortAsc, findIndexByName } from "../model";
 
 interface IReferencetextInputProps {
     name: string;
     value: string;
-    references: string[];
+    references: ISortable[];
     validationDisabled?: boolean
     onChange: (name: string, newName: string) => void
 }
@@ -18,7 +19,7 @@ export default class ReferencetextInput extends React.Component<IReferencetextIn
     }
 
     isValid() {
-        return this.props.validationDisabled || !this.props.validationDisabled && this.props.references.indexOf(this.props.value) !== -1;
+        return this.props.validationDisabled || !this.props.validationDisabled && findIndexByName(this.props.references, this.props.value) !== -1;
     }
 
     onChange(e: any) {
@@ -35,8 +36,8 @@ export default class ReferencetextInput extends React.Component<IReferencetextIn
                     onChange={this.onChange.bind(this)} 
                     className="edit-input">                                    
                     {
-                        references.map((x, i) => {
-                            return <MenuItem key={i} value={x}>{x}</MenuItem>
+                        sortAsc(references).map((x, i) => {
+                            return <MenuItem key={i} value={x.name}>{x.name}</MenuItem>
                         })
                     }
                     {

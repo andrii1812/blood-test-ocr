@@ -11,7 +11,7 @@ def format_date(date):
 
 @orm.db_session
 def get_all_reference_names():
-    return [item.name for item in ReferenceName.select()]
+    return [{'name': item.name, 'sortOrder': item.sort_order} for item in ReferenceName.select()]
 
 
 def format_image(i):
@@ -159,7 +159,7 @@ def update_test(test_id, values, tag, image_id):
 
 @orm.db_session
 def get_tags():
-    return [x.name for x in Tag.select()]
+    return [{'name': item.name, 'sortOrder': item.sort_order} for item in Tag.select()]
 
 
 @orm.db_session
