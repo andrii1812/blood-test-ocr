@@ -2,7 +2,7 @@ from operator import itemgetter
 
 import itertools
 from pony import orm
-from orm.entities import *
+from .entities import *
 
 
 def format_date(date):
@@ -198,6 +198,12 @@ def delete_image(image_id):
 
     if len(image.tests) != 0:
         raise ValueError('cannot delete image that used in tests')
+
+    path = os.path.join(
+        config.UPLOADS_DEFAULT_DEST,
+        config.UPLOADS_SET_NAME,
+        image.filename)
+    os.remove(path)
 
     image.delete()
 

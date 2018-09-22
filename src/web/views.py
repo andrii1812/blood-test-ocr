@@ -33,9 +33,9 @@ class ImageRes(Resource):
         url = web.images.url(filename)
 
         image_obj.stream.seek(0)
-        image = Image.open(image_obj.stream)
-        image_id = orm.save_image(filename, url, image.width, image.height)
-        return str(image_id)
+        with Image.open(image_obj.stream) as image:
+            image_id = orm.save_image(filename, url, image.width, image.height)
+            return str(image_id)
 
     def delete(self, image_id):
         orm.delete_image(image_id)

@@ -44,13 +44,13 @@ class TestImage(db.Entity):
     tests = Set('BloodTest')
 
 
-path = os.path.join(config.UPLOADS_DEFAULT_DEST, config.UPLOADS_SET_NAME)
-if not os.path.exists(path):
-    os.makedirs(path)
-db.bind('sqlite', config.DATABASE_PATH, create_db=True)
-db.generate_mapping(create_tables=True)
+def init_db():
+    path = os.path.join(config.UPLOADS_DEFAULT_DEST, config.UPLOADS_SET_NAME)
+    if not os.path.exists(path):
+        os.makedirs(path)
+    db.bind('sqlite', config.DATABASE_PATH, create_db=True)
+    db.generate_mapping(create_tables=True)
+    all_entities = [ReferenceName, Tag, TestImage, BloodTestEntry, BloodTest]
 
-all_entities = [ReferenceName, Tag, TestImage, BloodTestEntry, BloodTest]
-
-with db.set_perms_for(*all_entities):
-    perm('view', group='anybody')
+    with db.set_perms_for(*all_entities):
+        perm('view', group='anybody')

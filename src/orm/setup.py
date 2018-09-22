@@ -1,4 +1,5 @@
-from orm.entities import *
+from orm import ReferenceName, Tag
+import config
 from pony.orm import db_session
 
 
@@ -64,10 +65,11 @@ def add_tags():
 
 @db_session
 def seed_db():
-    add_reference_names()
-    add_tags()
+    if not len(ReferenceName.select()):
+        add_reference_names()
+    if not len(Tag.select()):
+        add_tags()
 
 
 if __name__ == '__main__':
     seed_db()
-
