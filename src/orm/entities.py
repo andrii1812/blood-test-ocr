@@ -2,46 +2,46 @@ import os
 from datetime import datetime
 
 import config
-from pony.orm import *
+import pony.orm as p
 
-db = Database()
+db = p.Database()
 
 
 class ReferenceName(db.Entity):
-    id = PrimaryKey(int, auto=True)
-    name = Required(str, unique=True)
-    sort_order = Required(int)
-    blood_test_entries = Set('BloodTestEntry')
+    id = p.PrimaryKey(int, auto=True)
+    name = p.Required(str, unique=True)
+    sort_order = p.Required(int)
+    blood_test_entries = p.Set('BloodTestEntry')
 
 
 class BloodTestEntry(db.Entity):
-    name = Required('ReferenceName')
-    value = Required(float)
-    blood_tests = Set('BloodTest')
+    name = p.Required('ReferenceName')
+    value = p.Required(float)
+    blood_tests = p.Set('BloodTest')
 
 
 class Tag(db.Entity):
-    id = PrimaryKey(int, auto=True)
-    name = Required(str, unique=True)
-    sort_order = Required(int)
-    blood_tests = Set('BloodTest')
+    id = p.PrimaryKey(int, auto=True)
+    name = p.Required(str, unique=True)
+    sort_order = p.Required(int)
+    blood_tests = p.Set('BloodTest')
 
 
 class BloodTest(db.Entity):
-    id = PrimaryKey(int, auto=True)
-    date = Required(datetime)
-    values = Set('BloodTestEntry')
-    images = Set('TestImage')
-    tag = Required('Tag')
+    id = p.PrimaryKey(int, auto=True)
+    date = p.Required(datetime)
+    values = p.Set('BloodTestEntry')
+    images = p.Set('TestImage')
+    tag = p.Required('Tag')
 
 
 class TestImage(db.Entity):
-    id = PrimaryKey(int, auto=True)
-    filename = Required(str)
-    url = Required(str)
-    width = Required(int)
-    height = Required(int)
-    tests = Set('BloodTest')
+    id = p.PrimaryKey(int, auto=True)
+    filename = p.Required(str)
+    url = p.Required(str)
+    width = p.Required(int)
+    height = p.Required(int)
+    tests = p.Set('BloodTest')
 
 
 def init_db():
@@ -53,4 +53,4 @@ def init_db():
     all_entities = [ReferenceName, Tag, TestImage, BloodTestEntry, BloodTest]
 
     with db.set_perms_for(*all_entities):
-        perm('view', group='anybody')
+        p.perm('view', group='anybody')

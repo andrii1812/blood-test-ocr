@@ -15,8 +15,8 @@ def index():
 
 @web.app.route('/uploads/<path:filename>')
 def uploaded_file(filename):
-    return send_from_directory(os.path.join('..', web.app.config['UPLOADS_DEFAULT_DEST']),
-                               filename)
+    return send_from_directory(
+        os.path.join('..', web.app.config['UPLOADS_DEFAULT_DEST']), filename)
 
 
 class ImageRes(Resource):
@@ -74,7 +74,14 @@ def ingest_image():
     image_id = orm.save_image(filename, url, image.width, image.height)
 
     result = test._asdict()
-    result['images'] = [{'id': image_id, 'path': url, 'width': image.width, 'height': image.height}]
+    result['images'] = [
+        {
+            'id': image_id,
+            'path': url,
+            'width': image.width,
+            'height': image.height
+        }
+    ]
     result['tag'] = orm.get_default_tag().name
     return jsonify(result)
 

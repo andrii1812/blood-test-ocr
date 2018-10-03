@@ -42,6 +42,6 @@ def test():
 
 
 if __name__ == '__main__':
-    #web.ocr.test()
+    # web.ocr.test()
     app.run(host=os.getenv('HOST'), port=os.getenv('PORT'), debug=True)
     pass

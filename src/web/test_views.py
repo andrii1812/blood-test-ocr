@@ -66,7 +66,8 @@ class TestImageResource(DbTestCase):
         image_name = image_name or self.create_image()
         with open(image_name, 'rb') as file:
             res = self.app_client.post('/image', data={
-                'image': (io.BytesIO(file.read()), os.path.basename(image_name))
+                'image':
+                    (io.BytesIO(file.read()), os.path.basename(image_name))
             })
             return self.assert_response(res)
 
@@ -95,7 +96,8 @@ class TestImageResource(DbTestCase):
         ids = [int(self.upload_image()), int(self.upload_image())]
         res = self.app_client.get('/image')
         json_res = self.assert_response(res)
-        self.assert_shape_in_array(json_res, ['path', 'width', 'height', 'tests', 'id'])
+        self.assert_shape_in_array(json_res,
+                                   ['path', 'width', 'height', 'tests', 'id'])
         self.assertEqual(len(json_res), 2)
         for id in map(lambda x: x['id'], json_res):
             self.assertIn(id, ids)
